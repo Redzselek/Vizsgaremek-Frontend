@@ -2,8 +2,8 @@
   "routes": {
     "/": {},
     "/about-profile": {},
-    "/frontend/movies-series": {},
     "/login": {},
+    "/movies-series": {},
     "/movies-series-about": {},
     "/register": {}
   }
