@@ -8,7 +8,7 @@ import { RegisterPageComponent } from './register-page/register-page.component';
 
 export const routes: Routes = [
     { component: MainPageComponent, path: '' },
-    { component: MoviesSeriesComponent, path: 'frontend/movies-series' },
+    { component: MoviesSeriesComponent, path: 'movies-series' },
     { component: AboutProfileComponent, path: 'about-profile' },
     { component: MoviesSeriesAboutComponent, path: 'movies-series-about' },
     { component: LoginPageComponent, path: 'login' },
