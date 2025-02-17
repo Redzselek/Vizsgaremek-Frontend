@@ -1,0 +1,9 @@
+.main-outlet{
+    width: 85vw;
+}
+
+@media only screen and (max-width: 768px) {
+    .main-outlet{
+        width: 100%;
+    }
+}
