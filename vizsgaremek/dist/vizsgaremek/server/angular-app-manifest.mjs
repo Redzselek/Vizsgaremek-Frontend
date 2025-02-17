@@ -32,14 +32,14 @@ export default {
 ],
   entryPointToBrowserMapping: undefined,
   assets: {
-    'index.csr.html': {size: 808, hash: '21ab51d8d6f69289c83f371137359fddf6e589a52b99794d1436d276de9d4840', text: () => import('./assets-chunks/index_csr_html.mjs').then(m => m.default)},
-    'index.server.html': {size: 1321, hash: '7555c977e1a33148f11c96a14172a3cc061907d5ba91693190e946bedc511a3c', text: () => import('./assets-chunks/index_server_html.mjs').then(m => m.default)},
-    'index.html': {size: 5531, hash: '223ffe9421b98db1fd75a30c2e549da2f835f04b1fb40924d61c180d2dd22aa9', text: () => import('./assets-chunks/index_html.mjs').then(m => m.default)},
-    'about-profile/index.html': {size: 5543, hash: '720ab22f9aebfee01019d936c95a641cba649558d6ee52a15e54e9d62844b3a4', text: () => import('./assets-chunks/about-profile_index_html.mjs').then(m => m.default)},
-    'movies-series/index.html': {size: 5543, hash: '6947e62b5ca2184babf020523cb99398f90a36a80350acd9b3c85be9a4e96e59', text: () => import('./assets-chunks/movies-series_index_html.mjs').then(m => m.default)},
-    'movies-series-about/index.html': {size: 5563, hash: 'c918dcba27ad20a6724ce2cf26799047541b4d5bc2e6235136b20df2e63725ee', text: () => import('./assets-chunks/movies-series-about_index_html.mjs').then(m => m.default)},
-    'login/index.html': {size: 5533, hash: 'fc1217e1e85c4924d036499db078bafdcc6df84afa4a0ff2b2fc19629172d765', text: () => import('./assets-chunks/login_index_html.mjs').then(m => m.default)},
-    'register/index.html': {size: 5543, hash: '330999c1772f945c6eae932c95ef88ceb4df8916d22c3e8911cff12b6eb53d90', text: () => import('./assets-chunks/register_index_html.mjs').then(m => m.default)},
+    'index.csr.html': {size: 916, hash: 'be37c8cddfc5cab5ec42bdc2e7c9639c860a6599178321d90c13b588502446f2', text: () => import('./assets-chunks/index_csr_html.mjs').then(m => m.default)},
+    'index.server.html': {size: 1430, hash: '536732cd2709a8e5113ec83a8941fd6f4418a0ed2ea581dbb580bba7f2bb5de5', text: () => import('./assets-chunks/index_server_html.mjs').then(m => m.default)},
+    'movies-series/index.html': {size: 6190, hash: 'a1864fc9556b945c15fabd690248ec2bb898121dd0bb2e8051270b0306d3e47a', text: () => import('./assets-chunks/movies-series_index_html.mjs').then(m => m.default)},
+    'movies-series-about/index.html': {size: 6210, hash: '1b53f513d62ade3495b7919a78a171021a5125b935da7da995dd7f5a6e23d765', text: () => import('./assets-chunks/movies-series-about_index_html.mjs').then(m => m.default)},
+    'index.html': {size: 6178, hash: '7cd3fd59cc3d4bc78b6f6a4d17d769c894875858417fd15074fd4983e93d2624', text: () => import('./assets-chunks/index_html.mjs').then(m => m.default)},
+    'login/index.html': {size: 6180, hash: '6e9c4555abe42789234aa4d1377c0d1bac288d2b4dc8394d9d1e8d5ddd44ddf8', text: () => import('./assets-chunks/login_index_html.mjs').then(m => m.default)},
+    'register/index.html': {size: 6190, hash: '8536db213cce2fb8e9947f1307af3103eda06bb9196f812aa70144685d22929e', text: () => import('./assets-chunks/register_index_html.mjs').then(m => m.default)},
+    'about-profile/index.html': {size: 6190, hash: 'd64000d4d5e5175a3697c193d7c02c04f327b56afa27d90bd978f8208d50cdbe', text: () => import('./assets-chunks/about-profile_index_html.mjs').then(m => m.default)},
     'styles-5INURTSO.css': {size: 0, hash: 'menYUTfbRu8', text: () => import('./assets-chunks/styles-5INURTSO_css.mjs').then(m => m.default)}
   },
 };
