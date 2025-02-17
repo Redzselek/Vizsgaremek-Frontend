@@ -20,3 +20,19 @@
         <button type="submit" class="btn btn-dark border">Register</button>
       </form>
 </div>
+
+<script>
+const express = require('express');
+const app = express();
+const bodyParser = require('body-parser');
+
+app.use(bodyParser.json());
+
+app.post('/register', (req, res) => {
+  const userData = req.body;
+  // process the user data here
+  res.json({ message: 'User registered successfully' });
+});
+
+app.listen(3000, () => console.log('Server listening on port 3000'));
+</script>
