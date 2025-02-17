@@ -1,37 +1,41 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark" data-bs-theme="dark">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark py-2 border-bottom" data-bs-theme="dark">
   <div class="container-fluid">
-    <a class="navbar-brand" routerLink="/frontend">Vizsgaremek</a>
+    <a class="navbar-brand fs-2" routerLink="/frontend">Vizsgaremek</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+      <ul class="navbar-nav me-auto">
         <li class="nav-item">
-          <a class="nav-link active" routerLink="/frontend" style="cursor: pointer;">Home</a>
+          <a class="nav-link fs-4" routerLink="/frontend">Home</a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item fs-4">
           <a class="nav-link disabled d-none d-sm-block" routerLink="/">·</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/frontend/movies-series" style="cursor: pointer;">Movies/Series</a>
+        <li class="nav-item fs-4">
+          <a class="nav-link" routerLink="/frontend/movies-series">Movies/Series</a>
         </li>
       </ul>
-      <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/frontend/about-profile" style="cursor: pointer;">Profile</a>
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item d-none d-sm-block">
+          <a class="nav-link" routerLink="/frontend/about-profile"><i class="fas fa-user-circle fs-1"></i></a>
+        </li>
+        <li class="nav-item d-block d-sm-none ">
+          <a class="nav-link fs-4">Profile</a>
         </li>
       </ul>
     </div>
   </div>
 </nav>
 
-<router-outlet />
+<div class="container-fluid">
+  <router-outlet />
+</div>
 
-<footer class="bg-dark text-white py-5 text-center" data-bs-theme="dark">
-  <div class="container-fluid">
+<footer class="container-fluid bg-dark text-white py-5 text-center border-top" data-bs-theme="dark">
     <div class="row">
       <div class="col-md-4">
-        <ul class="list-group-inline bg-dark">
+        <ul class="list-group-inline bg-dark ps-0">
           <li class="list-group-item mb-3 fs-2 fw-bolder">Contacts:</li>
           <li class="list-group-item mb-3 fw-medium">Phone: 123-456-789</li>
           <li class="list-group-item mb-3 fw-medium">Email: 2K9Dv&#64;gmail.com</li>
@@ -58,5 +62,4 @@
         </ul>
       </div>
     </div>
-  </div>
 </footer>
