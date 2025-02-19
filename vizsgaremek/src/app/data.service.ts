@@ -6,6 +6,7 @@ import { BehaviorSubject } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
+
 export class DataService {
   constructor(private _router: Router, private http: HttpClient) { }
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(this.get_logged_in_state());
