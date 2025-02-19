@@ -11,7 +11,9 @@ import { FormsModule } from '@angular/forms';
 })
 export class LoginPageComponent {
   constructor(private http: HttpClient, private dataservice: DataService) { }
+
   url = "https://egyedirobi.moriczcloud.hu/vizsga/login"
+  
   onSubmit(email: string, pass: string) {
     let headerss = new HttpHeaders();
     headerss.set('X-Requested-With', 'XMLHttpRequest')
@@ -24,7 +26,7 @@ export class LoginPageComponent {
       data => {
         console.log(data)
         this.dataservice.login()
-        this.dataservice.move_to('/')
+        this.dataservice.move_to('/movies-series')
       },
       error => document.getElementById("hiba")!.innerText = error.error.status
     )
