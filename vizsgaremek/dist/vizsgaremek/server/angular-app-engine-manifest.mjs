@@ -1,6 +1,6 @@
 
 export default {
-  basePath: 'frontend',
+  basePath: '/',
   supportedLocales: {
   "en-US": ""
 },

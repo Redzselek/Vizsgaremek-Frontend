@@ -1,10 +1,10 @@
 {
   "routes": {
-    "/frontend": {},
-    "/frontend/about-profile": {},
-    "/frontend/login": {},
-    "/frontend/movies-series": {},
-    "/frontend/movies-series-about": {},
-    "/frontend/register": {}
+    "/": {},
+    "/about-profile": {},
+    "/login": {},
+    "/movies-series": {},
+    "/movies-series-about": {},
+    "/register": {}
   }
 }
