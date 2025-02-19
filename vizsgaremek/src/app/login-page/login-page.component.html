@@ -1,12 +1,12 @@
-<div class="container mt-4 mb-4 p-5 border rounded" data-bs-theme="dark">
-    <form>
+<div class="container mt-4 mb-4 p-5 border rounded">
+    <form (ngSubmit)="onSubmit(email.value, pass.value)">
         <div class="mb-3">
-            <label for="name" class="form-label">Username / Email</label>
-            <input type="text" class="form-control" id="name">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" class="form-control" id="email" #email>
         </div>
         <div class="mb-3">
           <label for="password" class="form-label">Password</label>
-          <input type="password" class="form-control" id="password">
+          <input type="password" class="form-control" id="password" #pass>
         </div>
         <div class="mb-3 form-check">
           <input type="checkbox" class="form-check-input" id="check">
