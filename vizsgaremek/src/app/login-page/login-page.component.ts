@@ -7,5 +7,5 @@ import { Component } from '@angular/core';
   styleUrl: './login-page.component.css'
 })
 export class LoginPageComponent {
-
+  
 }
