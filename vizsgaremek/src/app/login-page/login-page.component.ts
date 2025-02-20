@@ -7,19 +7,7 @@ import { CommonModule } from '@angular/common';
 interface LoginResponse {
   message: string;
   status: string;
-  data: {
-    user: {
-      id: number;
-      name: string;
-      email: string;
-      email_verified_at: string | null;
-      created_at: string;
-      updated_at: string;
-      isAdmin: boolean | null;
-      apikey: string | null;
-    };
-    token: string;
-  };
+  token: string;
 }
 
 @Component({

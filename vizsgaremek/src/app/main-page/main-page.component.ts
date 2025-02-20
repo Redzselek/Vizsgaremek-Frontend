@@ -7,9 +7,5 @@ import { Component } from '@angular/core';
   styleUrl: './main-page.component.css'
 })
 export class MainPageComponent {
-  ngOnInit(): void {
-    fetch('https://egyedirobi.moriczcloud.hu/vizsga/dashboard')
-      .then(response => response.json())
-      .then(json => console.log(json))
-  }
+  
 }
