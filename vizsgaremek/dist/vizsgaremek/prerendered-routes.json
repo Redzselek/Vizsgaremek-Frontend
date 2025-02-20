@@ -1,6 +1,5 @@
 {
   "routes": {
-    "/.": {},
     "/./about-profile": {},
     "/./login": {},
     "/./movies-series": {},

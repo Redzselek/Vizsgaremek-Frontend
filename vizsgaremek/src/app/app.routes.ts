@@ -7,7 +7,7 @@ import { LoginPageComponent } from './login-page/login-page.component';
 import { RegisterPageComponent } from './register-page/register-page.component';
 
 export const routes: Routes = [
-    { path: '', component: MainPageComponent },
+    { path: '**', component: MainPageComponent, pathMatch: 'full'},
     { path: 'movies-series', component: MoviesSeriesComponent },
     { path: 'about-profile', component: AboutProfileComponent },
     { path: 'movies-series-about', component: MoviesSeriesAboutComponent },

@@ -4,12 +4,6 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
-interface LoginResponse {
-  message: string;
-  status: string;
-  token: string;
-}
-
 @Component({
   selector: 'app-login-page',
   standalone: true,
@@ -35,7 +29,7 @@ export class LoginPageComponent {
     formData.append('email', email);
     formData.append('password', pass);
 
-    this.http.post<LoginResponse>(this.url, formData, { headers: headerss, observe: 'response', withCredentials: true }).subscribe(
+    this.http.post<any>(this.url, formData, { headers: headerss, observe: 'response', withCredentials: true }).subscribe(
       data => {
         if (data.status === 200 && data.body) {
           this.successMessage = data.body.message;
