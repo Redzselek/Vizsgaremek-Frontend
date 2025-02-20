@@ -18,4 +18,8 @@
         {{ successMessage }}
         <button type="button" class="btn-close" (click)="showSuccessAlert = false" aria-label="Close"></button>
     </div>
+    <div *ngIf="showErrorAlert" class="alert alert-danger alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x mt-3" role="alert">
+      {{ errorMessage }}
+      <button type="button" class="btn-close" (click)="showErrorAlert = false" aria-label="Close"></button>
+  </div>
 </div>

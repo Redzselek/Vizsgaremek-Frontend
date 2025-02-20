@@ -37,5 +37,6 @@ export class MoviesSeriesComponent implements OnInit {
           this.shows = response.data.shows;
         }
       });
+      console.log(this.shows);
   }
 }

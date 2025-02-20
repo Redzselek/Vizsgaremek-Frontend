@@ -19,7 +19,9 @@ interface LoginResponse {
 })
 export class LoginPageComponent {
   showSuccessAlert: boolean = false;
+  showErrorAlert: boolean = false;
   successMessage: string = '';
+  errorMessage: string = '';
 
   constructor(private http: HttpClient, private dataservice: DataService) { }
 
@@ -38,13 +40,18 @@ export class LoginPageComponent {
         if (data.status === 200 && data.body) {
           this.successMessage = data.body.message;
           this.showSuccessAlert = true;
+          this.showErrorAlert = false;
           this.dataservice.login();
-          setTimeout(() => {
+          setTimeout(() => {            
             this.dataservice.move_to('/movies-series');
           }, 1500);
         }
       },
-      error => document.getElementById("hiba")!.innerText = error.error.status
+      error => {
+        this.errorMessage = error.error.message || 'Sikertelen bejelentkezés';
+        this.showErrorAlert = true;
+        this.showSuccessAlert = false;
+      }
     )
   }
 }
