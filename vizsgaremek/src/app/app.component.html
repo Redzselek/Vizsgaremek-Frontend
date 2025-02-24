@@ -8,21 +8,21 @@
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav me-auto">
               <li class="nav-item">
-                  <a class="nav-link fs-4" routerLink="/">Home</a>
+                  <a class="nav-link fs-4" [routerLink]="['/']">Home</a>
               </li>
               <li class="nav-item fs-4">
                   <a class="nav-link disabled d-none d-sm-block" routerLink="/">·</a>
               </li>
               <li class="nav-item fs-4">
-                  <a class="nav-link" routerLink="/movies-series">Movies/Series</a>
+                  <a class="nav-link" [routerLink]="['/movies-series']">Movies/Series</a>
               </li>
           </ul>
           <ul *ngIf="authenticated" class="navbar-nav ms-auto">
               <li class="nav-item d-none d-sm-block">
-                  <a class="nav-link" routerLink="/about-profile"><i class="fas fa-user-circle fs-1"></i></a>
+                  <a class="nav-link" [routerLink]="['/about-profile']"><i class="fas fa-user-circle fs-1"></i></a>
               </li>
               <li class="nav-item d-block d-sm-none ">
-                  <a class="nav-link fs-4" routerLink="/about-profile">Profile</a>
+                  <a class="nav-link fs-4" [routerLink]="['/about-profile']">Profile</a>
               </li>
           </ul>
           <ul *ngIf="authenticated" class="navbar-nav ms-auto">
@@ -32,10 +32,10 @@
           </ul>
           <ul *ngIf="!authenticated" class="navbar-nav me-auto">
               <li class="nav-item">
-                  <a class="nav-link fs-4" routerLink="/login">Login</a>
+                  <a class="nav-link fs-4" [routerLink]="['/login']">Login</a>
               </li>
               <li class="nav-item fs-4">
-                  <a class="nav-link" routerLink="/register">Register</a>
+                  <a class="nav-link" [routerLink]="['/register']">Register</a>
               </li>
           </ul>
       </div>
