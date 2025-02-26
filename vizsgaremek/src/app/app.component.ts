@@ -32,7 +32,6 @@ export class AppComponent {
       this.http.post<any>(this.url, {}, { withCredentials: true }).subscribe(
         response => {
           localStorage.removeItem('logged');
-          this.dataservice.move_to('/login');
         }
       )
     }
