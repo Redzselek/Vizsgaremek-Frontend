@@ -34,11 +34,29 @@ export class AuthService {
           localStorage.setItem('auth_token', response.message);
         }
         this.userSubject.next({ isLoggedIn: true });
-        // Optionally fetch user info
-        this.getUserInfo();
+        // Fetch user info
+        this.getUserInfo().subscribe();
       }),
       catchError(error => {
         console.error('Login error:', error);
+        return throwError(() => error);
+      })
+    );
+  }
+
+  /**
+   * Register method
+   */
+  register(name: string, email: string, password: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/vizsga-api/register`, { 
+      name, 
+      email, 
+      password 
+    }, {
+      withCredentials: true
+    }).pipe(
+      catchError(error => {
+        console.error('Registration error:', error);
         return throwError(() => error);
       })
     );
@@ -49,8 +67,9 @@ export class AuthService {
    * Important: withCredentials: true is required for cookie deletion
    */
   logout(): Observable<any> {
-    return this.http.post(`${this.apiUrl}/vizsga/logout`, {}, {
-      withCredentials: true // Critical for cookie deletion!
+    return this.http.post(`${this.apiUrl}/vizsga-api/logout`, {}, {
+      withCredentials: true, // Critical for cookie deletion!
+      headers: this.getAuthHeaders()
     }).pipe(
       tap(() => {
         // Clear token from localStorage
@@ -69,7 +88,7 @@ export class AuthService {
    * Get user information
    */
   getUserInfo(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/vizsga/user`, {
+    return this.http.get(`${this.apiUrl}/vizsga-api/user`, {
       withCredentials: true,
       headers: this.getAuthHeaders()
     }).pipe(
@@ -87,7 +106,7 @@ export class AuthService {
    * Check if user is logged in
    */
   private checkAuthStatus(): void {
-    this.http.get(`${this.apiUrl}/vizsga/user`, {
+    this.http.get(`${this.apiUrl}/vizsga-api/user`, {
       withCredentials: true,
       headers: this.getAuthHeaders()
     }).subscribe({

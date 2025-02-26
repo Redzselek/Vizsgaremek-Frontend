@@ -37,8 +37,8 @@ export default {
 ],
   entryPointToBrowserMapping: undefined,
   assets: {
-    'index.csr.html': {size: 2275, hash: 'd64dbe5d4029b2e28f99db01e3bf3ef7f39fe4f231f1ca9a84884080d9dbd09e', text: () => import('./assets-chunks/index_csr_html.mjs').then(m => m.default)},
-    'index.server.html': {size: 1451, hash: '5e8017794bd2d6eafdb6e939401fc3c5fe8b2cffa5ecb6dd380d1c2c51856199', text: () => import('./assets-chunks/index_server_html.mjs').then(m => m.default)},
+    'index.csr.html': {size: 2275, hash: '1af9f142d555691f2a071a7117829fb261f432f67df0084fb17fafbebaebf448', text: () => import('./assets-chunks/index_csr_html.mjs').then(m => m.default)},
+    'index.server.html': {size: 1451, hash: '386f4cbd1b4bb71693756d33174bdacafea36bf296fe826876386a4f6ee11d5c', text: () => import('./assets-chunks/index_server_html.mjs').then(m => m.default)},
     'styles-MECZKUYO.css': {size: 1213, hash: 'JXC4EHhpbiE', text: () => import('./assets-chunks/styles-MECZKUYO_css.mjs').then(m => m.default)}
   },
 };

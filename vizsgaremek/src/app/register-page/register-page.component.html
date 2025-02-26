@@ -1,22 +1,62 @@
 <div class="container mt-4 mb-4 p-5 border rounded">
-    <form>
+    <h2 class="mb-4">Regisztráció</h2>
+    <form (ngSubmit)="onSubmit()" #registerForm="ngForm">
         <div class="mb-3">
-            <label for="name" class="form-label">Username</label>
-            <input type="text" class="form-control" id="name">
+            <label for="name" class="form-label">Felhasználónév</label>
+            <input type="text" class="form-control" id="name" name="name" 
+                   [(ngModel)]="name" required
+                   #nameModel="ngModel"
+                   [class.is-invalid]="nameModel.invalid && (nameModel.dirty || nameModel.touched)">
+            <div class="invalid-feedback" *ngIf="nameModel.invalid && (nameModel.dirty || nameModel.touched)">
+                <div *ngIf="nameModel.errors?.['required']">Felhasználónév megadása kötelező</div>
+            </div>
         </div>
         <div class="mb-3">
-          <label for="email" class="form-label">Email address</label>
-          <input type="email" class="form-control" id="email" aria-describedby="emailHelp">
-          <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+          <label for="email" class="form-label">Email cím</label>
+          <input type="email" class="form-control" id="email" name="email"
+                 [(ngModel)]="email" required email
+                 #emailModel="ngModel"
+                 [class.is-invalid]="emailModel.invalid && (emailModel.dirty || emailModel.touched)">
+          <div class="invalid-feedback" *ngIf="emailModel.invalid && (emailModel.dirty || emailModel.touched)">
+            <div *ngIf="emailModel.errors?.['required']">Email cím megadása kötelező</div>
+            <div *ngIf="emailModel.errors?.['email']">Érvénytelen email formátum</div>
+          </div>
+          <div id="emailHelp" class="form-text">Az email címét nem osztjuk meg harmadik féllel.</div>
         </div>
         <div class="mb-3">
-          <label for="password" class="form-label">Password</label>
-          <input type="password" class="form-control" id="password">
+          <label for="password" class="form-label">Jelszó</label>
+          <input type="password" class="form-control" id="password" name="password"
+                 [(ngModel)]="password" required minlength="6"
+                 #passwordModel="ngModel"
+                 [class.is-invalid]="passwordModel.invalid && (passwordModel.dirty || passwordModel.touched)">
+          <div class="invalid-feedback" *ngIf="passwordModel.invalid && (passwordModel.dirty || passwordModel.touched)">
+            <div *ngIf="passwordModel.errors?.['required']">Jelszó megadása kötelező</div>
+            <div *ngIf="passwordModel.errors?.['minlength']">A jelszónak legalább 6 karakter hosszúnak kell lennie</div>
+          </div>
         </div>
         <div class="mb-3 form-check">
-          <input type="checkbox" class="form-check-input" id="check">
-          <label class="form-check-label" for="check">I acknowledge the <a href="#">Privacy Policy</a></label>
+          <input type="checkbox" class="form-check-input" id="check" name="policyAccepted"
+                 [(ngModel)]="policyAccepted" required
+                 #policyModel="ngModel"
+                 [class.is-invalid]="policyModel.invalid && (policyModel.dirty || policyModel.touched)">
+          <label class="form-check-label" for="check">Elfogadom az <a href="#">Adatvédelmi szabályzatot</a></label>
+          <div class="invalid-feedback" *ngIf="policyModel.invalid && (policyModel.dirty || policyModel.touched)">
+            El kell fogadnia az adatvédelmi szabályzatot
+          </div>
         </div>
-        <button type="submit" class="btn btn-dark border">Register</button>
+        <button type="submit" class="btn btn-dark border" [disabled]="registerForm.invalid || isLoading">
+            <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2"></span>
+            Regisztráció
+        </button>
       </form>
+
+      <div *ngIf="showSuccessAlert" class="alert alert-success alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x mt-3" role="alert">
+        {{ successMessage }}
+        <button type="button" class="btn-close" (click)="showSuccessAlert = false" aria-label="Close"></button>
+      </div>
+      
+      <div *ngIf="showErrorAlert" class="alert alert-danger alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x mt-3" role="alert">
+        {{ errorMessage }}
+        <button type="button" class="btn-close" (click)="showErrorAlert = false" aria-label="Close"></button>
+      </div>
 </div>

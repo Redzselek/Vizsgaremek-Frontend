@@ -27,16 +27,34 @@ interface ApiResponse {
 })
 export class MoviesSeriesComponent implements OnInit {
   shows: Show[] = [];
+  isLoading: boolean = true;
+  error: string | null = null;
 
   constructor(private http: HttpClient) {}
 
   ngOnInit() {
-    this.http.get<ApiResponse>('https://egyedirobi.moriczcloud.hu/vizsga/dashboard')
-      .subscribe(response => {
+    this.fetchShows();
+  }
+
+  fetchShows() {
+    this.isLoading = true;
+    this.error = null;
+
+    this.http.get<ApiResponse>('https://egyedirobi.moriczcloud.hu/vizsga-api/dashboard', {
+      withCredentials: true
+    })
+    .subscribe({
+      next: (response) => {
         if (response.status === 'success') {
           this.shows = response.data.shows;
         }
-      });
-      console.log(this.shows);
+        this.isLoading = false;
+      },
+      error: (err) => {
+        console.error('Error fetching shows:', err);
+        this.error = 'Nem sikerült betölteni a filmeket és sorozatokat. Kérjük, próbálja újra később.';
+        this.isLoading = false;
+      }
+    });
   }
 }
