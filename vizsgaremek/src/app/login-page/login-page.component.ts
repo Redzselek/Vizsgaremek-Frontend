@@ -1,8 +1,10 @@
 import { Component } from '@angular/core';
 import { DataService } from '../data.service';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { AuthService } from '../services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login-page',
@@ -16,36 +18,48 @@ export class LoginPageComponent {
   showErrorAlert: boolean = false;
   successMessage: string = '';
   errorMessage: string = '';
+  isLoading: boolean = false;
+  
+  // Add these properties for ngModel binding
+  email: string = '';
+  password: string = '';
 
-  constructor(private http: HttpClient, private dataservice: DataService) { }
-
-  url = "https://egyedirobi.moriczcloud.hu/vizsga/login"
+  constructor(
+    private authService: AuthService,
+    private dataService: DataService,
+    private router: Router
+  ) { }
   
   onSubmit(email: string, pass: string) {
-    let headerss = new HttpHeaders();
-    headerss.set('X-Requested-With', 'XMLHttpRequest')
-    headerss.set('Content-Type', 'application/json')
-    let formData: FormData = new FormData();
-    formData.append('email', email);
-    formData.append('password', pass);
+    if (!email || !pass) {
+      this.errorMessage = 'Email és jelszó megadása kötelező';
+      this.showErrorAlert = true;
+      return;
+    }
 
-    this.http.post<any>(this.url, formData, { headers: headerss, observe: 'response', withCredentials: true }).subscribe(
-      data => {
-        if (data.status === 200 && data.body) {
-          this.successMessage = data.body.message;
-          this.showSuccessAlert = true;
-          this.showErrorAlert = false;
-          this.dataservice.login();
-          setTimeout(() => {            
-            this.dataservice.move_to('/movies-series');
-          }, 1500);
-        }
+    this.isLoading = true;
+    this.showErrorAlert = false;
+    this.showSuccessAlert = false;
+
+    this.authService.login(email, pass).subscribe({
+      next: (response) => {
+        this.isLoading = false;
+        this.successMessage = response.message || 'Sikeres bejelentkezés';
+        this.showSuccessAlert = true;
+        
+        // Update the data service state as well for backward compatibility
+        this.dataService.login();
+        
+        // Navigate to the movies-series page after a short delay
+        setTimeout(() => {
+          this.router.navigate(['/movies-series']);
+        }, 1500);
       },
-      error => {
-        this.errorMessage = error.error.message || 'Sikertelen bejelentkezés';
+      error: (error) => {
+        this.isLoading = false;
+        this.errorMessage = error.error?.message || 'Sikertelen bejelentkezés';
         this.showErrorAlert = true;
-        this.showSuccessAlert = false;
       }
-    )
+    });
   }
 }

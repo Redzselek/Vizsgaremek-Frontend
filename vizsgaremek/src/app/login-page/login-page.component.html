@@ -1,18 +1,37 @@
 <div class="container mt-4 mb-4 p-5 border rounded">
-    <form (ngSubmit)="onSubmit(email.value, pass.value)">
+    <h2 class="mb-4">Bejelentkezés</h2>
+    <form (ngSubmit)="onSubmit(emailInput.value, passwordInput.value)" #loginForm="ngForm">
         <div class="mb-3">
             <label for="email" class="form-label">Email</label>
-            <input type="email" class="form-control" id="email" #email>
+            <input type="email" class="form-control" id="email" 
+                   name="email" #emailInput
+                   [(ngModel)]="email" required email
+                   #emailModel="ngModel"
+                   [class.is-invalid]="emailModel.invalid && (emailModel.dirty || emailModel.touched)">
+            <div class="invalid-feedback" *ngIf="emailModel.invalid && (emailModel.dirty || emailModel.touched)">
+                <div *ngIf="emailModel.errors?.['required']">Email cím megadása kötelező</div>
+                <div *ngIf="emailModel.errors?.['email']">Érvénytelen email formátum</div>
+            </div>
         </div>
         <div class="mb-3">
           <label for="password" class="form-label">Password</label>
-          <input type="password" class="form-control" id="password" #pass>
+          <input type="password" class="form-control" id="password" 
+                 name="password" #passwordInput
+                 [(ngModel)]="password" required
+                 #passwordModel="ngModel"
+                 [class.is-invalid]="passwordModel.invalid && (passwordModel.dirty || passwordModel.touched)">
+          <div class="invalid-feedback" *ngIf="passwordModel.invalid && (passwordModel.dirty || passwordModel.touched)">
+            <div *ngIf="passwordModel.errors?.['required']">Jelszó megadása kötelező</div>
+          </div>
         </div>
         <div class="mb-3 form-check">
           <input type="checkbox" class="form-check-input" id="check">
           <label class="form-check-label" for="check">Stay logged in</label>
         </div>
-        <button type="submit" class="btn btn-dark border">Login</button>
+        <button type="submit" class="btn btn-dark border" [disabled]="loginForm.invalid || isLoading">
+            <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2"></span>
+            Login
+        </button>
       </form>
       <div *ngIf="showSuccessAlert" class="alert alert-success alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x mt-3" role="alert">
         {{ successMessage }}

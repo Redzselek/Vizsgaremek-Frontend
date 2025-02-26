@@ -1,38 +1,51 @@
 import { HttpClientModule } from '@angular/common/http';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { DataService } from './data.service';
 import { HttpClient } from '@angular/common/http';
 import { Emitters } from './emitters/emitters';
 import { CommonModule } from '@angular/common';
+import { AuthService } from './services/auth.service';
 
 @Component({
   selector: 'app-root',
   imports: [RouterOutlet, FontAwesomeModule, HttpClientModule, CommonModule, RouterLink],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  styleUrls: ['./app.component.css']
 })
-export class AppComponent {
-  constructor(private dataservice: DataService, private http: HttpClient) { }
-    authenticated = false;
+export class AppComponent implements OnInit {
+  authenticated = false;
   
-    url = "https://egyedirobi.moriczcloud.hu/vizsga/logout"
+  constructor(
+    private dataService: DataService, 
+    private authService: AuthService
+  ) { }
+  
+  ngOnInit(): void {
+    // Subscribe to the existing emitter for backward compatibility
+    Emitters.authEmitter.subscribe(
+      (auth: boolean) => {
+        this.authenticated = auth;
+      }
+    );
     
-    ngOnInit(): void {
-      Emitters.authEmitter.subscribe(
-        (auth: boolean) => {
-          this.authenticated = auth;
-        }
-      );
-    }
+    // Also subscribe to the auth service's user observable
+    this.authService.user$.subscribe(user => {
+      this.authenticated = !!user?.isLoggedIn;
+    });
+  }
   
-    logout(){
-      console.log("logging out");
-      this.http.post<any>(this.url, {}, { withCredentials: true }).subscribe(
-        response => {
-          localStorage.removeItem('logged');
-        }
-      )
-    }
+  logout() {
+    console.log("Logging out");
+    this.authService.logout().subscribe({
+      next: () => {
+        // Update the data service state as well for backward compatibility
+        this.dataService.logout();
+      },
+      error: (error) => {
+        console.error('Error during logout:', error);
+      }
+    });
+  }
 }
