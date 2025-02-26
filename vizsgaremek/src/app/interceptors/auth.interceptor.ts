@@ -21,9 +21,7 @@ export class AuthInterceptor implements HttpInterceptor {
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     // Add withCredentials: true to all requests
-    request = request.clone({
-      withCredentials: true
-    });
+    request = request.clone({ withCredentials: true });
 
     return next.handle(request).pipe(
       catchError((error: HttpErrorResponse) => {

@@ -1,12 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-about-profile',
-  imports: [CommonModule],
+  standalone: true,
+  imports: [CommonModule, HttpClientModule],
   templateUrl: './about-profile.component.html',
-  styleUrl: './about-profile.component.css'
+  styleUrls: ['./about-profile.component.css']
 })
 export class AboutProfileComponent implements OnInit {
   data: any;
@@ -14,7 +15,7 @@ export class AboutProfileComponent implements OnInit {
   constructor(private http: HttpClient) {}
 
   ngOnInit() {
-    this.http.get('https://egyedirobi.moriczcloud.hu/vizsga/user').subscribe(
+    this.http.get('https://egyedirobi.moriczcloud.hu/vizsga/user', { withCredentials: true }).subscribe(
       (response) => {
         this.data = response;
         console.log(this.data);
