@@ -20,7 +20,7 @@ export class DataService {
     this.isAuthenticatedSubject.next(this.get_logged_in_state());
   }
 
-  private get_logged_in_state(): boolean {
+  public get_logged_in_state(): boolean {
     if (isPlatformBrowser(this.platformId)) {
       // Check for both the legacy 'logged' flag and the new auth_token
       return !!localStorage.getItem('logged') || !!localStorage.getItem('auth_token');

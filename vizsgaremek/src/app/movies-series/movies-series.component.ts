@@ -40,7 +40,7 @@ export class MoviesSeriesComponent implements OnInit {
     this.isLoading = true;
     this.error = null;
 
-    this.http.get<ApiResponse>('https://egyedirobi.moriczcloud.hu/vizsga-api/dashboard', {
+    this.http.get<ApiResponse>('https://egyedirobi.moriczcloud.hu/vizsga/dashboard', {
       withCredentials: true
     })
     .subscribe({

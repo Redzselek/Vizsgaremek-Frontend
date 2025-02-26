@@ -1,3 +1,43 @@
-<p>main-page works!</p>
-<h1 *ngIf="authenticated" style="color: green;">Be vagy jelentkezve</h1>
-<h1 *ngIf="!authenticated" style="color: red;">Nem vagy bejelentkezve</h1>
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card">
+                <div class="card-header">
+                    <h2>Üdvözöljük a Film és Sorozat Adatbázisban!</h2>
+                </div>
+                <div class="card-body">
+                    <div class="alert" [ngClass]="authenticated ? 'alert-success' : 'alert-warning'">
+                        <h3 *ngIf="authenticated" class="mb-3" style="color: green;">
+                            <i class="bi bi-check-circle-fill me-2"></i>
+                            Bejelentkezve
+                        </h3>
+                        <h3 *ngIf="!authenticated" class="mb-3" style="color: red;">
+                            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                            Nincs bejelentkezve
+                        </h3>
+
+                        <div *ngIf="authenticated">
+                            <p class="lead mb-4">Üdvözöljük {{ userName || 'Felhasználó' }}!</p>
+                            <p>Most már hozzáférhet az összes funkcióhoz:</p>
+                            <ul class="list-group mb-4">
+                                <li class="list-group-item">Böngészhet a filmek és sorozatok között</li>
+                                <li class="list-group-item">Megtekintheti a részletes információkat</li>
+                                <li class="list-group-item">Megtekintheti a felhasználói profilját</li>
+                            </ul>
+                        </div>
+
+                        <div *ngIf="!authenticated">
+                            <p class="lead mb-4">A teljes funkcionalitás eléréséhez kérjük, jelentkezzen be!</p>
+                            <p>Bejelentkezés után a következő funkciók válnak elérhetővé:</p>
+                            <ul class="list-group mb-4">
+                                <li class="list-group-item">Filmek és sorozatok böngészése</li>
+                                <li class="list-group-item">Részletes információk megtekintése</li>
+                                <!-- <li class="list-group-item">Felhasználói profil kezelése</li> -->
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>1>
