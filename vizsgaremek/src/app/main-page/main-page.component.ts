@@ -24,41 +24,38 @@ export class MainPageComponent implements OnInit, OnDestroy {
   ) {}
   
   ngOnInit(): void {
-    // Subscribe to the emitter for backward compatibility
+    // Initialize authentication state from localStorage
+    this.authenticated = this.dataService.get_logged_in_state();
+    
+    // Subscribe to the emitter for updates
     this.subscriptions.push(
       Emitters.authEmitter.subscribe((auth: boolean) => {
         this.authenticated = auth;
       })
     );
     
-    // Also subscribe to the auth service's user observable
+    // Subscribe to the data service's authentication observable
     this.subscriptions.push(
-      this.authService.user$.subscribe(user => {
-        this.authenticated = !!user?.isLoggedIn;
-        this.userName = user?.name || null;
-        
-        // Emit the authentication status for other components
-        Emitters.authEmitter.emit(this.authenticated);
+      this.dataService.isAuthenticated$.subscribe(isAuthenticated => {
+        this.authenticated = isAuthenticated;
       })
     );
     
-    // Check authentication status on init
-    this.checkAuthStatus();
+    // Subscribe to the auth service's user observable for the user name
+    this.subscriptions.push(
+      this.authService.user$.subscribe(user => {
+        if (user) {
+          this.userName = user.name || null;
+        }
+      })
+    );
+    
+    // Emit the current authentication state
+    Emitters.authEmitter.emit(this.authenticated);
   }
   
   ngOnDestroy(): void {
     // Clean up subscriptions to prevent memory leaks
     this.subscriptions.forEach(sub => sub.unsubscribe());
-  }
-  
-  private checkAuthStatus(): void {
-    // Check if user is logged in via DataService (legacy)
-    const isLoggedInViaDataService = this.dataService.get_logged_in_state();
-    
-    // If logged in via DataService but not via AuthService, update emitter
-    if (isLoggedInViaDataService && !this.authenticated) {
-      this.authenticated = true;
-      Emitters.authEmitter.emit(true);
-    }
   }
 }

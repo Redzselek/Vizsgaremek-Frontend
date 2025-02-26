@@ -37,8 +37,8 @@ export default {
 ],
   entryPointToBrowserMapping: undefined,
   assets: {
-    'index.csr.html': {size: 2275, hash: '6b69cf909690a566a43f2ae1785042218c192c2ed9e1c543eb9b5819eebcdfd7', text: () => import('./assets-chunks/index_csr_html.mjs').then(m => m.default)},
-    'index.server.html': {size: 1451, hash: '8d3ffe804d18388cc826f37ab1c2d4629e8510491a537a7d514f05abd1bd9c21', text: () => import('./assets-chunks/index_server_html.mjs').then(m => m.default)},
+    'index.csr.html': {size: 2275, hash: '04fdd2a18d1b0aa6483cb31865c0785366e4a7a087df7d2585e6ea499f8f6bed', text: () => import('./assets-chunks/index_csr_html.mjs').then(m => m.default)},
+    'index.server.html': {size: 1451, hash: '0cb40615fbd63529deca13eee65e21afd007d94f2ac0a1d342f50497f6713c7e', text: () => import('./assets-chunks/index_server_html.mjs').then(m => m.default)},
     'styles-MECZKUYO.css': {size: 1213, hash: 'JXC4EHhpbiE', text: () => import('./assets-chunks/styles-MECZKUYO_css.mjs').then(m => m.default)}
   },
 };
