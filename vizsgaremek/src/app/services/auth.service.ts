@@ -25,15 +25,17 @@ export class AuthService {
    * Important: withCredentials: true is required for cookie handling
    */
   login(email: string, password: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/vizsga/login`, { email, password }, {
+    return this.http.post(`${this.apiUrl}/vizsga-api/login`, { email, password }, {
       withCredentials: true // Critical for cookie handling!
     }).pipe(
       tap((response: any) => {
-        if (response.status === 'success') {
-          this.userSubject.next({ isLoggedIn: true });
-          // Optionally fetch user info
-          this.getUserInfo();
+        // Store token in localStorage as a backup
+        if (response.message) {
+          localStorage.setItem('auth_token', response.message);
         }
+        this.userSubject.next({ isLoggedIn: true });
+        // Optionally fetch user info
+        this.getUserInfo();
       }),
       catchError(error => {
         console.error('Login error:', error);
@@ -51,6 +53,8 @@ export class AuthService {
       withCredentials: true // Critical for cookie deletion!
     }).pipe(
       tap(() => {
+        // Clear token from localStorage
+        localStorage.removeItem('auth_token');
         this.userSubject.next(null);
         this.router.navigate(['/login']);
       }),
@@ -66,7 +70,8 @@ export class AuthService {
    */
   getUserInfo(): Observable<any> {
     return this.http.get(`${this.apiUrl}/vizsga/user`, {
-      withCredentials: true
+      withCredentials: true,
+      headers: this.getAuthHeaders()
     }).pipe(
       tap(user => {
         this.userSubject.next({ isLoggedIn: true, ...user });
@@ -83,7 +88,8 @@ export class AuthService {
    */
   private checkAuthStatus(): void {
     this.http.get(`${this.apiUrl}/vizsga/user`, {
-      withCredentials: true
+      withCredentials: true,
+      headers: this.getAuthHeaders()
     }).subscribe({
       next: (user) => {
         this.userSubject.next({ isLoggedIn: true, ...user });
@@ -99,5 +105,17 @@ export class AuthService {
    */
   isLoggedIn(): boolean {
     return this.userSubject.value !== null;
+  }
+
+  /**
+   * Get authentication headers with token if available
+   */
+  private getAuthHeaders(): HttpHeaders {
+    let headers = new HttpHeaders();
+    const token = localStorage.getItem('auth_token');
+    if (token) {
+      headers = headers.set('Authorization', `Bearer ${token}`);
+    }
+    return headers;
   }
 }

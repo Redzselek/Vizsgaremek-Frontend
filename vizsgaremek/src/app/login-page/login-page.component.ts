@@ -44,16 +44,24 @@ export class LoginPageComponent {
     this.authService.login(email, pass).subscribe({
       next: (response) => {
         this.isLoading = false;
-        this.successMessage = response.message || 'Sikeres bejelentkezés';
-        this.showSuccessAlert = true;
         
-        // Update the data service state as well for backward compatibility
-        this.dataService.login();
-        
-        // Navigate to the movies-series page after a short delay
-        setTimeout(() => {
-          this.router.navigate(['/movies-series']);
-        }, 1500);
+        // Check if the response contains a token
+        if (response.message) {
+          this.successMessage = 'Sikeres bejelentkezés';
+          this.showSuccessAlert = true;
+          
+          // Update the data service state as well for backward compatibility
+          this.dataService.login();
+          
+          // Navigate to the movies-series page after a short delay
+          setTimeout(() => {
+            this.router.navigate(['/movies-series']);
+          }, 1500);
+        } else {
+          // Handle unexpected response format
+          this.errorMessage = 'Sikertelen bejelentkezés: Érvénytelen válasz a szervertől';
+          this.showErrorAlert = true;
+        }
       },
       error: (error) => {
         this.isLoading = false;

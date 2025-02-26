@@ -23,10 +23,25 @@ export class AuthInterceptor implements HttpInterceptor {
     // Add withCredentials: true to all requests
     request = request.clone({ withCredentials: true });
 
+    // Get token from localStorage
+    const token = localStorage.getItem('auth_token');
+    
+    // If token exists, add it to the Authorization header
+    if (token) {
+      request = request.clone({
+        setHeaders: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+    }
+
     return next.handle(request).pipe(
       catchError((error: HttpErrorResponse) => {
         // If 401 Unauthorized error, redirect to login page
         if (error.status === 401) {
+          // Clear token from localStorage
+          localStorage.removeItem('auth_token');
+          
           // Update authentication state
           this.dataService.logout();
           

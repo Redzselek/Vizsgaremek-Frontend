@@ -1,0 +1,11 @@
+{
+  "routes": {
+    "/.": {},
+    "/./about-profile": {},
+    "/./login": {},
+    "/./main-page": {},
+    "/./movies-series": {},
+    "/./movies-series-about": {},
+    "/./register": {}
+  }
+}

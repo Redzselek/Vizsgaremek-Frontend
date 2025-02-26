@@ -22,7 +22,8 @@ export class DataService {
 
   private get_logged_in_state(): boolean {
     if (isPlatformBrowser(this.platformId)) {
-      return !!localStorage.getItem('logged');
+      // Check for both the legacy 'logged' flag and the new auth_token
+      return !!localStorage.getItem('logged') || !!localStorage.getItem('auth_token');
     }
     return false; // Default to not logged in when running server-side
   }
@@ -37,6 +38,7 @@ export class DataService {
   logout() {
     if (isPlatformBrowser(this.platformId)) {
       localStorage.removeItem('logged');
+      localStorage.removeItem('auth_token');
     }
     this.isAuthenticatedSubject.next(false);
   }
