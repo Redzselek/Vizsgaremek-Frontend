@@ -1,28 +1,43 @@
+import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
+import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { Router, RouterModule } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
+import { isPlatformBrowser } from '@angular/common';
 
 @Injectable({
   providedIn: 'root'
 })
-
 export class DataService {
-  constructor(private _router: Router, private http: HttpClient) { }
-  private isAuthenticatedSubject = new BehaviorSubject<boolean>(this.get_logged_in_state());
+  private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
   public isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
 
+  constructor(
+    private _router: Router, 
+    private http: HttpClient,
+    @Inject(PLATFORM_ID) private platformId: Object
+  ) {
+    // Initialize after construction to avoid the initial error
+    this.isAuthenticatedSubject.next(this.get_logged_in_state());
+  }
+
   private get_logged_in_state(): boolean {
-    return !!localStorage.getItem('logged');  // Or check cookies if you're storing it there
+    if (isPlatformBrowser(this.platformId)) {
+      return !!localStorage.getItem('logged');
+    }
+    return false; // Default to not logged in when running server-side
   }
 
   login() {
-    localStorage.setItem('logged', "true")
+    if (isPlatformBrowser(this.platformId)) {
+      localStorage.setItem('logged', "true");
+    }
     this.isAuthenticatedSubject.next(true);
   }
 
   logout() {
-    localStorage.removeItem('logged');
+    if (isPlatformBrowser(this.platformId)) {
+      localStorage.removeItem('logged');
+    }
     this.isAuthenticatedSubject.next(false);
   }
 
