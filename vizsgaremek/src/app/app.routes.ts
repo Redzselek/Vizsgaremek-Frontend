@@ -5,6 +5,8 @@ import { MoviesSeriesAboutComponent } from './movies-series-about/movies-series-
 import { AboutProfileComponent } from './about-profile/about-profile.component';
 import { LoginPageComponent } from './login-page/login-page.component';
 import { RegisterPageComponent } from './register-page/register-page.component';
+import { NavbarComponent } from './navbar/navbar.component';
+import { FooterComponent } from './footer/footer.component';
 
 export const routes: Routes = [
     { path: 'main-page', component: MainPageComponent },
@@ -13,5 +15,7 @@ export const routes: Routes = [
     { path: 'movies-series-about', component: MoviesSeriesAboutComponent },
     { path: 'login', component: LoginPageComponent },
     { path: 'register', component: RegisterPageComponent },
+    { path: 'navbar', component: NavbarComponent },
+    { path: 'footer', component: FooterComponent },
     { path: '', pathMatch: 'full', redirectTo: 'main-page'}
 ];

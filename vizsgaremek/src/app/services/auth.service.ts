@@ -16,8 +16,10 @@ export class AuthService {
     private http: HttpClient,
     private router: Router
   ) {
-    // Check if user is logged in on startup
-    this.checkAuthStatus();
+    // Use setTimeout to ensure this runs after the platform is initialized
+    setTimeout(() => {
+      this.checkAuthStatus();
+    }, 0);
   }
 
   /**
@@ -106,6 +108,11 @@ export class AuthService {
    * Check if user is logged in
    */
   private checkAuthStatus(): void {
+    // Only check auth status in browser environment
+    if (typeof window === 'undefined') {
+      return; // Skip this in server-side rendering
+    }
+    
     this.http.get(`${this.apiUrl}/vizsga-api/user`, {
       withCredentials: true,
       headers: this.getAuthHeaders()
@@ -131,10 +138,15 @@ export class AuthService {
    */
   private getAuthHeaders(): HttpHeaders {
     let headers = new HttpHeaders();
-    const token = localStorage.getItem('auth_token');
-    if (token) {
-      headers = headers.set('Authorization', `Bearer ${token}`);
+    
+    // Check if running in browser environment
+    if (typeof window !== 'undefined' && window.localStorage) {
+      const token = localStorage.getItem('auth_token');
+      if (token) {
+        headers = headers.set('Authorization', `Bearer ${token}`);
+      }
     }
+    
     return headers;
   }
 }

@@ -2,6 +2,11 @@
     width: 85vw;
 }
 
+.progress {
+    height: 5px;
+}
+  
+
 @media only screen and (max-width: 768px) {
     .main-outlet{
         width: 100%;

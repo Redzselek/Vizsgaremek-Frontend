@@ -33,12 +33,20 @@ export default {
   {
     "renderMode": 2,
     "route": "/./register"
+  },
+  {
+    "renderMode": 2,
+    "route": "/./navbar"
+  },
+  {
+    "renderMode": 2,
+    "route": "/./footer"
   }
 ],
   entryPointToBrowserMapping: undefined,
   assets: {
-    'index.csr.html': {size: 2275, hash: '04fdd2a18d1b0aa6483cb31865c0785366e4a7a087df7d2585e6ea499f8f6bed', text: () => import('./assets-chunks/index_csr_html.mjs').then(m => m.default)},
-    'index.server.html': {size: 1451, hash: '0cb40615fbd63529deca13eee65e21afd007d94f2ac0a1d342f50497f6713c7e', text: () => import('./assets-chunks/index_server_html.mjs').then(m => m.default)},
+    'index.csr.html': {size: 2275, hash: '9ea4152551d85dfbb71b16c5221bedc17796ef6c692b6b941fb0a88fbac4040d', text: () => import('./assets-chunks/index_csr_html.mjs').then(m => m.default)},
+    'index.server.html': {size: 1451, hash: '29142f70d980064761bb27978504e22060ecbd773b04a7c9bbc09ed52f5f30a4', text: () => import('./assets-chunks/index_server_html.mjs').then(m => m.default)},
     'styles-MECZKUYO.css': {size: 1213, hash: 'JXC4EHhpbiE', text: () => import('./assets-chunks/styles-MECZKUYO_css.mjs').then(m => m.default)}
   },
 };

@@ -1,51 +1,30 @@
-import { HttpClientModule } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
-import { RouterLink, RouterOutlet } from '@angular/router';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { DataService } from './data.service';
-import { HttpClient } from '@angular/common/http';
-import { Emitters } from './emitters/emitters';
-import { CommonModule } from '@angular/common';
-import { AuthService } from './services/auth.service';
+import { Component, OnInit, HostListener } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
+import { NavbarComponent } from "./navbar/navbar.component";
+import { FooterComponent } from './footer/footer.component';
+
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, FontAwesomeModule, HttpClientModule, CommonModule, RouterLink],
+  imports: [RouterOutlet, NavbarComponent, FooterComponent],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements OnInit {
-  authenticated = false;
-  
-  constructor(
-    private dataService: DataService, 
-    private authService: AuthService
-  ) { }
-  
-  ngOnInit(): void {
-    // Subscribe to the existing emitter for backward compatibility
-    Emitters.authEmitter.subscribe(
-      (auth: boolean) => {
-        this.authenticated = auth;
-      }
-    );
-    
-    // Also subscribe to the auth service's user observable
-    this.authService.user$.subscribe(user => {
-      this.authenticated = !!user?.isLoggedIn;
-    });
+export class AppComponent implements OnInit{
+  progressWidth: number = 0;
+
+  @HostListener('window:scroll', [])
+  onWindowScroll() {
+    this.calculateProgressWidth();
   }
-  
-  logout() {
-    console.log("Logging out");
-    this.authService.logout().subscribe({
-      next: () => {
-        // Update the data service state as well for backward compatibility
-        this.dataService.logout();
-      },
-      error: (error) => {
-        console.error('Error during logout:', error);
-      }
-    });
+
+  ngOnInit() {
+    this.calculateProgressWidth();
+  }
+
+  calculateProgressWidth() {
+    const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    const scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
+    this.progressWidth = (scrollPosition / scrollHeight) * 100;
   }
 }

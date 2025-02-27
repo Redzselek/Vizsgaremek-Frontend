@@ -2,10 +2,12 @@
   "routes": {
     "/.": {},
     "/./about-profile": {},
+    "/./footer": {},
     "/./login": {},
     "/./main-page": {},
     "/./movies-series": {},
     "/./movies-series-about": {},
+    "/./navbar": {},
     "/./register": {}
   }
 }

@@ -1,43 +1,70 @@
 <div class="container mt-5">
     <div class="row">
-        <div class="col-md-8 offset-md-2">
+        <div class="col-md-12 text-center">
+            <h1 class="fw-bold">Welcome to MovieTreasure!</h1>
+            <h3 class="mt-5">MovieTreasure is a comprehensive online movie database offering an extensive collection of films, TV series. Users can easily browse through thousands of movies.</h3>
+        </div>
+        <div class="col-md-6 offset-md-3 mt-5">
             <div class="card">
-                <div class="card-header">
-                    <h2>Üdvözöljük a Film és Sorozat Adatbázisban!</h2>
-                </div>
                 <div class="card-body">
-                    <div class="alert" [ngClass]="authenticated ? 'alert-success' : 'alert-warning'">
+                    <div class="alert mb-0" [ngClass]="authenticated ? 'alert-success' : 'alert-warning'">
                         <h3 *ngIf="authenticated" class="mb-3" style="color: green;">
                             <i class="bi bi-check-circle-fill me-2"></i>
-                            Bejelentkezve
+                            You're Logged In
                         </h3>
                         <h3 *ngIf="!authenticated" class="mb-3" style="color: red;">
                             <i class="bi bi-exclamation-triangle-fill me-2"></i>
-                            Nincs bejelentkezve
+                            You're Not Logged In!
                         </h3>
-
                         <div *ngIf="authenticated">
-                            <p class="lead mb-4">Üdvözöljük {{ userName || 'Felhasználó' }}!</p>
-                            <p>Most már hozzáférhet az összes funkcióhoz:</p>
-                            <ul class="list-group mb-4">
-                                <li class="list-group-item">Böngészhet a filmek és sorozatok között</li>
-                                <li class="list-group-item">Megtekintheti a részletes információkat</li>
-                                <li class="list-group-item">Megtekintheti a felhasználói profilját</li>
+                            <p class="lead mb-4">Welcome {{ userName || 'Felhasználó' }}!</p>
+                            <p>Now you can access all the features:</p>
+                            <ul class="list-group">
+                                <li class="list-group-item">You can browse movies and series</li>
+                                <li class="list-group-item">You can view detailed information</li>
+                                <li class="list-group-item">You can view your user profile</li>
                             </ul>
                         </div>
-
                         <div *ngIf="!authenticated">
-                            <p class="lead mb-4">A teljes funkcionalitás eléréséhez kérjük, jelentkezzen be!</p>
-                            <p>Bejelentkezés után a következő funkciók válnak elérhetővé:</p>
-                            <ul class="list-group mb-4">
-                                <li class="list-group-item">Filmek és sorozatok böngészése</li>
-                                <li class="list-group-item">Részletes információk megtekintése</li>
-                                <!-- <li class="list-group-item">Felhasználói profil kezelése</li> -->
+                            <p class="lead mb-4">Please log in to access all the functions</p>
+                            <p>After logging in, the following functions become available:</p>
+                            <ul class="list-group">
+                                <li class="list-group-item">Browse movies and series</li>
+                                <li class="list-group-item">View detailed information</li>
                             </ul>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        <div class="col-md-12 pos mt-5">
+            <div class="row column-gap-2">
+                <h1 class="text-center mb-5">Best Movies</h1>
+                <div class="card" style="width: 18rem;">
+                    <img src="..." class="card-img-top" alt="...">
+                    <div class="card-body">
+                      <h5 class="card-title">Card title</h5>
+                      <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                      <a href="#" class="btn btn-primary">Go somewhere</a>
+                    </div>
+                </div>
+                <div class="card" style="width: 18rem;">
+                    <img src="..." class="card-img-top" alt="...">
+                    <div class="card-body">
+                      <h5 class="card-title">Card title</h5>
+                      <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                      <a href="#" class="btn btn-primary">Go somewhere</a>
+                    </div>
+                </div>
+                <div class="card" style="width: 18rem;">
+                    <img src="..." class="card-img-top" alt="...">
+                    <div class="card-body">
+                      <h5 class="card-title">Card title</h5>
+                      <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                      <a href="#" class="btn btn-primary">Go somewhere</a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-</div>1>
+</div>
