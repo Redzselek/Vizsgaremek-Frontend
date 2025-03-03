@@ -5,6 +5,7 @@ import { RouterLink } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { HttpClient } from '@angular/common/http';
 import { Emitters } from '../emitters/emitters';
+import { Router } from '@angular/router';
 import { DataService } from '../data.service';
 import { AuthService } from '../services/auth.service';
 
@@ -19,7 +20,8 @@ export class NavbarComponent implements OnInit {
   
   constructor(
     private dataService: DataService, 
-    private authService: AuthService
+    private authService: AuthService,
+    private router: Router
   ) { }
   
   ngOnInit(): void {
@@ -35,16 +37,20 @@ export class NavbarComponent implements OnInit {
       this.authenticated = !!user?.isLoggedIn;
     });
   }
-  
+
   logout() {
-    console.log("Logging out");
     this.authService.logout().subscribe({
       next: () => {
-        // Update the data service state as well for backward compatibility
+        // Update data service state
         this.dataService.logout();
+        // Navigate to login page
+        this.router.navigate(['/login']);
       },
-      error: (error) => {
-        console.error('Error during logout:', error);
+      error: (err) => {
+        console.error('Logout error:', err);
+        // Even if there's an error, we'll still clear local state and redirect
+        this.dataService.logout();
+        this.router.navigate(['/login']);
       }
     });
   }
