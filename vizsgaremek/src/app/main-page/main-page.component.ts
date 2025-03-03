@@ -4,12 +4,11 @@ import { Emitters } from '../emitters/emitters';
 import { AuthService } from '../services/auth.service';
 import { DataService } from '../data.service';
 import { Subscription } from 'rxjs';
-import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-main-page',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule],
   templateUrl: './main-page.component.html',
   styleUrls: ['./main-page.component.css']
 })
