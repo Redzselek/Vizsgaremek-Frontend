@@ -37,8 +37,9 @@ export class DataService {
 
   logout() {
     if (isPlatformBrowser(this.platformId)) {
-      localStorage.removeItem('logged');
+      // localStorage.removeItem('logged');
       localStorage.removeItem('auth_token');
+      localStorage.setItem('logged', "false");
     }
     this.isAuthenticatedSubject.next(false);
   }
