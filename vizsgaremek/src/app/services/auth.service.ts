@@ -149,4 +149,21 @@ export class AuthService {
     
     return headers;
   }
+  /**
+   * Get authenticated users bookmarks
+   */
+  getUserBookmarks(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/vizsga-api/get-watchlist`, {
+      withCredentials: true,
+      headers: this.getAuthHeaders()
+    }).pipe(
+      tap(user => {
+        this.userSubject.next({ isLoggedIn: true, ...user });
+      }),
+      catchError(error => {
+        console.error('Error fetching user data:', error);
+        return throwError(() => error);
+      })
+    );
+  }
 }

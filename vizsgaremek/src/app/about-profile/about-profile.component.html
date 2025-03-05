@@ -1,46 +1,175 @@
 <div class="container mt-4">
-  <div class="card">
-    <div class="card-header">
-      <h2>Felhasználói Profil</h2>
-    </div>
-    <div class="card-body">
-      <div *ngIf="user; else loading">
-        <div class="row mb-3">
-          <div class="col-md-4 fw-bold">Név:</div>
-          <div class="col-md-8">{{ user.name }}</div>
-        </div>
-        <div class="row mb-3">
-          <div class="col-md-4 fw-bold">Email:</div>
-          <div class="col-md-8">{{ user.email }}</div>
-        </div>
-        <div class="row mb-3">
-          <div class="col-md-4 fw-bold">Azonosító:</div>
-          <div class="col-md-8">{{ user.id }}</div>
-        </div>
-        <div class="row mb-3">
-          <div class="col-md-4 fw-bold">Regisztráció dátuma:</div>
-          <div class="col-md-8">{{ user.created_at | date:'yyyy-MM-dd HH:mm' }}</div>
-        </div>
-        
-        <!-- Display all other user properties -->
-        <div class="mt-4">
-          <h4>Összes felhasználói adat:</h4>
-          <pre class="p-3 rounded">{{ user | json }}</pre>
-        </div>
-      </div>
-      
-      <ng-template #loading>
-        <div class="text-center py-5">
-          <div class="spinner-border" role="status">
-            <span class="visually-hidden">Betöltés...</span>
+  <div class="row">
+      <div class="col-md-12 p-3">
+          <h1 class="fw-bold float-start">Your Profile</h1>
+          <div class="float-end">
+              <button onclick="modalSettings()" type="button" class="btn btn-gear" data-bs-toggle="modal" data-bs-target="#settingsModal">
+                  <i class="fa-solid fa-gear fs-1"></i>
+              </button>
+              <button class="btn" type="button"><i class="fas fa-sign-out-alt fs-1 btn-logout"></i></button>
+              <div class="modal fade" id="settingsModal" tabindex="-1" aria-labelledby="settingsModalLabel" aria-hidden="true">
+                  <div class="modal-dialog">
+                      <div class="modal-content">
+                          <div class="modal-header">
+                              <h1 class="modal-title fs-3" id="settingsModalLabel">Settings</h1>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                          <div class="modal-body">
+                              <div class="col-md-6 d-flex gap-2">
+                                  <p>
+                                      <button onclick="checkExpand()" id="usernameBtn" class="btn settings-btn mb-2" type="button" data-bs-toggle="collapse" data-bs-target="#collapseUsername" aria-expanded="false" aria-controls="collapseUsername">
+                                        Username
+                                      </button>
+                                  </p>
+                                  <p>
+                                      <button onclick="checkExpand()" id="passwordBtn" class="btn settings-btn mb-2" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePassword" aria-expanded="false" aria-controls="collapsePassword">
+                                        Password
+                                      </button>
+                                  </p>
+                              </div>
+                              <div class="col-md-12">
+                                  <div class="collapse show showSettings border border-1 p-3 rounded" id="collapseUsername">
+                                      <div>
+                                          <h4>Change Your Username:</h4>
+                                          <input type="text" class="userEditInputs">
+                                      </div>
+                                  </div>
+                                  <div class="collapse showSettings border border-1 p-3 rounded" id="collapsePassword">
+                                      <div>
+                                          <h4>Change Your Password:</h4>
+                                          <input type="text" class="userEditInputs">
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                          <div class="modal-footer">
+                              <button class="btn btn-account settings-btn" type="button">Delete Account</button>
+                          </div>
+                      </div>
+                  </div>
+              </div>
           </div>
-          <p class="mt-3">Felhasználói adatok betöltése...</p>
-        </div>
-      </ng-template>
-    </div>
-    
-    <div class="card-footer">
-      <button class="btn btn-danger" (click)="logout()">Kijelentkezés</button>
-    </div>
+      </div>
+      <hr>
+  </div>
+  <div class="row mt-4">
+      <div class="col-md-6">
+          <h3 class="fw-bold">Username:</h3>
+          <h3 class="text-center mt-4">{{ user.name }}</h3>
+      </div>
+      <div class="col-md-6">
+          <h3 class="fw-bold">Email:</h3>
+          <h3 class="text-center mt-4">{{ user.email }}</h3>
+      </div>
+  </div>
+  <div class="row mt-5">
+      <div class="col-md-12 text-center">
+          <h1 class="fw-bold">Your Bookmarked</h1>
+      </div>
+      <div class="container mt-4 bookmarkContainer swiper">
+          <div class="row">
+              <div class="gap-2 bookmarks">
+                  <div class="swiper-container "  grab-cursor="true" loop="true" init="false">
+                      <div class="swiper-slide">
+                          <div class="card  text-center">
+                              <img src="https://picsum.photos/300/300" class="rounded-top">
+                              <div class="card-body">
+                                <h5 class="card-title">Card titlard</h5>
+                                <hr>
+                                <a class="btn btn-light w-50">About</a>
+                                <a class="btn btn-dark position-absolute top-0 end-0 mt-2 me-2"><i class="fa-solid fa-bookmark"></i></a>
+                              </div>
+                          </div>
+                        </div>
+                    </div>
+              </div>
+          </div>
+      </div>
+  </div> 
+  <div class="row mt-5">
+      <div class="col-md-12 text-center">
+          <h1 class="fw-bold">Your Uploads</h1>
+      </div>
+      <div class="container mt-4">
+          <div class="row">
+              <div class="col-md-6">
+                  <h2 class="uploads-text fs-1">Movies</h2>
+                  <div class="user-uploads p-3 w-100 fs-4 mb-5">
+                      <p>{{ user.uploaded_movies }}</p>
+                      <button class="fa-btn ms-3"><i class="asd fa-solid fa-pen-to-square"></i></button>
+                      <button class="fa-btn ms-3"><i class="fa-solid fa-square-minus"></i></button>
+                  </div>
+              </div>
+              <div class="col-md-6">
+                  <h2 class="uploads-text fs-1">Series</h2>
+                  <div class="user-uploads p-3 w-100 fs-4">
+                      <p>{{ user.uploaded_movies }}</p>
+                      <button class="fa-btn ms-3"><i class="fa-solid fa-pen-to-square"></i></button>
+                      <button class="fa-btn ms-3"><i class="fa-solid fa-square-minus"></i></button>
+                  </div>
+              </div>
+          </div>
+      </div>
   </div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-element-bundle.min.js"></script>
+<script>
+    const swiperEl = document.querySelector('swiper-container')
+    Object.assign(swiperEl, {
+      slidesPerView: 1,
+      spaceBetween: 10,
+      breakpoints: {
+        640: {
+          slidesPerView: 2,
+          spaceBetween: 20,
+        },
+        768: {
+          slidesPerView: 3,
+          spaceBetween: 200,
+        },
+        1024: {
+          slidesPerView: 4,
+          spaceBetween: 260,
+        },
+        1440: {
+          slidesPerView: 5,
+          spaceBetween: 200,
+        },
+      },
+    });
+    swiperEl.initialize();
+    function modalSettings(){
+        var usernameBtn = document.getElementById('usernameBtn');
+        var collapseUsername = document.getElementById('collapseUsername');
+        if (collapseUsername.classList.contains('show')) {
+            usernameBtn.setAttribute('aria-expanded', 'true');
+            collapseUsername.classList.add('show');
+        }
+    }
+    function checkExpand() {
+    var usernameBtn = document.getElementById('usernameBtn');
+    var passwordBtn = document.getElementById('passwordBtn');
+    var collapseUsername = document.getElementById('collapseUsername');
+    var collapsePassword = document.getElementById('collapsePassword');
+
+    if (usernameBtn === event.target) {
+        if (collapseUsername.classList.contains('show')) {
+            // nem csinál semmit, ha ugyanarra kattintunk
+        } else {
+            usernameBtn.setAttribute('aria-expanded', 'true');
+            collapseUsername.classList.add('show');
+            collapsePassword.classList.remove('show');
+            passwordBtn.setAttribute('aria-expanded', 'false');
+        }
+    } else if (passwordBtn === event.target) {
+        if (collapsePassword.classList.contains('show')) {
+            // nem csinál semmit, ha ugyanarra kattintunk
+        } else {
+            passwordBtn.setAttribute('aria-expanded', 'true');
+            collapsePassword.classList.add('show');
+            collapseUsername.classList.remove('show');
+            usernameBtn.setAttribute('aria-expanded', 'false');
+        }
+    }
+}
+</script>
