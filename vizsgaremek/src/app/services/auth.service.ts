@@ -1,8 +1,9 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
+import { isPlatformBrowser } from '@angular/common';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +15,8 @@ export class AuthService {
   
   constructor(
     private http: HttpClient,
-    private router: Router
+    private router: Router,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {
     // Use setTimeout to ensure this runs after the platform is initialized
     setTimeout(() => {
@@ -32,7 +34,7 @@ export class AuthService {
     }).pipe(
       tap((response: any) => {
         // Store token in localStorage as a backup
-        if (response.message) {
+        if (response.message && isPlatformBrowser(this.platformId)) {
           localStorage.setItem('auth_token', response.message);
         }
         this.userSubject.next({ isLoggedIn: true });
@@ -75,7 +77,9 @@ export class AuthService {
     }).pipe(
       tap(() => {
         // Clear token from localStorage
-        localStorage.removeItem('auth_token');
+        if (isPlatformBrowser(this.platformId)) {
+          localStorage.removeItem('auth_token');
+        }
         this.userSubject.next(null);
         this.router.navigate(['/login']);
       }),
@@ -109,7 +113,7 @@ export class AuthService {
    */
   private checkAuthStatus(): void {
     // Only check auth status in browser environment
-    if (typeof window === 'undefined') {
+    if (!isPlatformBrowser(this.platformId)) {
       return; // Skip this in server-side rendering
     }
     
@@ -140,7 +144,7 @@ export class AuthService {
     let headers = new HttpHeaders();
     
     // Check if running in browser environment
-    if (typeof window !== 'undefined' && window.localStorage) {
+    if (isPlatformBrowser(this.platformId)) {
       const token = localStorage.getItem('auth_token');
       if (token) {
         headers = headers.set('Authorization', `Bearer ${token}`);

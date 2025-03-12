@@ -12,7 +12,8 @@ import { DataService } from '../data.service';
   templateUrl: './about-profile.component.html',
   styleUrls: ['./about-profile.component.css']
 })
-export class AboutProfileComponent implements OnInit {
+export class AboutProfileComponent
+  implements OnInit {
   user: any = null;
   loading: boolean = true;
   error: string | null = null;
@@ -21,7 +22,7 @@ export class AboutProfileComponent implements OnInit {
     private authService: AuthService,
     private dataService: DataService,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.fetchUserData();
@@ -40,7 +41,7 @@ export class AboutProfileComponent implements OnInit {
         this.error = 'Nem sikerült betölteni a felhasználói adatokat. Kérjük, jelentkezzen be újra.';
         this.loading = false;
         console.error('Error fetching user data:', err);
-        
+
         // Redirect to login if not authenticated
         setTimeout(() => {
           this.router.navigate(['/login']);

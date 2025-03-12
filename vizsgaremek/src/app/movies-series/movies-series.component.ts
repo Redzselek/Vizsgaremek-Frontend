@@ -5,7 +5,7 @@ import { HttpClient } from '@angular/common/http';
 interface Show {
   title: string;
   description: string;
-  category: string;
+  category: string[];
   type: string;
   image_url: string;
 }
