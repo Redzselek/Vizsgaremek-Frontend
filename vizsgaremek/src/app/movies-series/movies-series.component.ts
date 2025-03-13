@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
 
 interface Show {
+  id: number;
   title: string;
   description: string;
   category: string[];
@@ -30,10 +32,13 @@ export class MoviesSeriesComponent implements OnInit {
   isLoading: boolean = true;
   error: string | null = null;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private router: Router) {}
 
   ngOnInit() {
     this.fetchShows();
+  }
+  showDetails($id: number) {
+    this.router.navigate(['/movies-series', $id]);
   }
 
   fetchShows() {
