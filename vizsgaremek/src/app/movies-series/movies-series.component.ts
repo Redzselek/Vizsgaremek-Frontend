@@ -38,7 +38,7 @@ export class MoviesSeriesComponent implements OnInit {
     this.fetchShows();
   }
   showDetails($id: number) {
-    this.router.navigate(['/movies-series', $id]);
+    this.router.navigate(['/vizsga-api/show-selected-show/', $id]);
   }
 
   fetchShows() {
