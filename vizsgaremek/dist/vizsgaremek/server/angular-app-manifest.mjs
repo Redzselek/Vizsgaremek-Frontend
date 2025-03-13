@@ -19,6 +19,10 @@ export default {
     "route": "/./movies-series"
   },
   {
+    "renderMode": "none",
+    "route": "/./movies-series-about/*"
+  },
+  {
     "renderMode": 2,
     "route": "/./about-profile"
   },
@@ -41,8 +45,8 @@ export default {
 ],
   entryPointToBrowserMapping: undefined,
   assets: {
-    'index.csr.html': {size: 2545, hash: 'f5115e4773a920daafbfc4f873574f3f4df78f03304e7c3163991580171da5b8', text: () => import('./assets-chunks/index_csr_html.mjs').then(m => m.default)},
-    'index.server.html': {size: 1721, hash: '0f2420866fb8bd8aab5bb002689299a175ecc1afbd89f83a65f0e7129da3a8fd', text: () => import('./assets-chunks/index_server_html.mjs').then(m => m.default)},
+    'index.csr.html': {size: 2494, hash: '39c1912392c87d28c8e9807dc09ee23a78fc7a69b5abc74d000b5de0fe3d0403', text: () => import('./assets-chunks/index_csr_html.mjs').then(m => m.default)},
+    'index.server.html': {size: 1670, hash: '5640408bae22cfad968c84da4e5aec693016bc2db28f740ffad0956fe6625312', text: () => import('./assets-chunks/index_server_html.mjs').then(m => m.default)},
     'styles-REVB3AVR.css': {size: 1213, hash: '5Fi7DFfxITE', text: () => import('./assets-chunks/styles-REVB3AVR_css.mjs').then(m => m.default)}
   },
 };

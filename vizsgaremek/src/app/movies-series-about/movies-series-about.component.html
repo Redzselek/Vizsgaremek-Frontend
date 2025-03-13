@@ -1,5 +1,16 @@
 <!-- movies-series-about.component.html -->
 <div class="container mt-3">
+  <div *ngIf="isLoading" class="d-flex justify-content-center my-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+
+  <div *ngIf="error" class="alert alert-danger" role="alert">
+    {{ error }}
+  </div>
+
+  <div *ngIf="!isLoading && !error">
     <!-- Cím szekció -->
     <div class="row mb-3">
       <div class="col-12">
@@ -12,12 +23,13 @@
       <!-- Bal oldali oszlop: Poszter és trailer -->
       <div class="col-md-8">
         <div class="movie-poster mb-3">
-          <img src="{{ selectedShow.image_url }}" style="max-height: 500px;" alt="{{ selectedShow.title }}" class="img-fluid rounded">
+          <img [src]="'/uploads/vizsga/' + selectedShow.image_url" style="max-height: 500px;" [alt]="selectedShow.title" class="img-fluid rounded">
         </div>
   
         <!-- Műfajok -->
         <div class="mb-3">
-          <div class="genre-pill bg-primary">{{ selectedShow.category }}</div>
+          <span class="badge bg-primary me-1" *ngFor="let cat of selectedShow.category">{{cat}}</span>
+          <span class="badge bg-secondary ms-2">{{selectedShow.type}}</span>
         </div>
   
         <!-- Leírás -->
@@ -30,20 +42,20 @@
       <!-- Jobb oldali oszlop: Értékelések és statisztikák -->
       <div class="col-md-4">
         <!-- Értékelés -->
-        <div class="stats-card mb-3">
-          <h6 class="text-secondary mb-2">RATING</h6>
+        <div class="stats-card mb-3 p-3 border rounded">
+          <h6 class="text-secondary mb-2">ÉRTÉKELÉS</h6>
           <div class="d-flex align-items-center justify-content-center">
-            <i class="fas fa-star star-color me-2 fa-2x"></i>
+            <i class="bi bi-star-fill text-warning me-2 fs-4"></i>
             <div>
-              <h4 class="mb-0">{{ selectedShow.rating }}<span class="text-secondary">/10</span></h4>
-              <small class="text-secondary">{{ selectedShow.rating_count }}K</small>
+              <h4 class="mb-0">{{ selectedShow.rating || 'N/A' }}<span class="text-secondary" *ngIf="selectedShow.rating">/10</span></h4>
+              <small class="text-secondary" *ngIf="selectedShow.rating_count">{{ selectedShow.rating_count }}K</small>
             </div>
           </div>
         </div>
   
         <!-- Felhasználói értékelés -->
-        <div class="stats-card mb-3">
-          <h6 class="text-secondary mb-2">YOUR RATING</h6>
+        <div class="stats-card mb-3 p-3 border rounded">
+          <h6 class="text-secondary mb-2">SAJÁT ÉRTÉKELÉS</h6>
           <div class="d-flex align-items-center justify-content-center">
             <i class="far fa-star text-primary me-2 fa-2x"></i>
             <h4 class="mb-0">Rate</h4>
@@ -75,13 +87,14 @@
         </div> -->
   
         <!-- Watchlist gomb -->
-        <button class="btn watchlist-btn btn-lg w-100 mb-3">
-          <i class="fas fa-plus me-2"></i> Add to Watchlist
+        <button class="btn btn-dark w-100 mb-3">
+          <i class="bi bi-plus-circle me-2"></i> Hozzáadás a Watchlisthez
         </button>
-        <p class="text-center text-secondary">Added by 32.9K users</p>
+        <!-- <p class="text-center text-secondary">Added by 32.9K users</p> -->
   
         <!-- Értékelések -->
-        <!-- <div class="d-flex justify-content-between mb-3">
+        <!-- 
+        <div class="d-flex justify-content-between mb-3">
           <div>
             <h5>115</h5>
             <p class="text-secondary">User reviews</p>
@@ -91,6 +104,6 @@
             <p class="text-secondary">Critic reviews</p>
           </div>
         </div> -->
-      </div>
     </div>
   </div>
+</div>
