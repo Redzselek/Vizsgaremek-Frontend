@@ -38,14 +38,14 @@ export class MoviesSeriesComponent implements OnInit {
     this.fetchShows();
   }
   showDetails($id: number) {
-    this.router.navigate(['/vizsga-api/show-selected-show/', $id]);
+    this.router.navigate(['/movies-series-about', $id]);
   }
 
   fetchShows() {
     this.isLoading = true;
     this.error = null;
 
-    this.http.get<ApiResponse>('https://egyedirobi.moriczcloud.hu/vizsga/dashboard', {
+    this.http.get<ApiResponse>('https://egyedirobi.moriczcloud.hu/vizsga-api/dashboard', {
       withCredentials: true
     })
     .subscribe({
