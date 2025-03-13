@@ -47,7 +47,7 @@ export class MoviesSeriesAboutComponent implements OnInit {
     this.isLoading = true;
     this.error = null;
 
-    this.http.get<any>(`https://egyedirobi.moriczcloud.hu/vizsga-api/selected-show/${id}`)
+    this.http.post<any>(`https://egyedirobi.moriczcloud.hu/vizsga-api/selected-show/${id}`, {})
       .subscribe({
         next: (response) => {
           if (response && response.data) {
