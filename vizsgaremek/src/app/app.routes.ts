@@ -15,8 +15,8 @@ export const moviesSeriesAboutRoute = {
     renderMode: RenderMode.Prerender,
     getPrerenderParams: (req: { params: { id: string } }) => {
         return [{ id: req.params.id }];
-      }
-  };
+        }
+    };
 
 export const routes: Routes = [
     { path: 'main-page', component: MainPageComponent },
@@ -26,5 +26,6 @@ export const routes: Routes = [
     { path: 'register', component: RegisterPageComponent },
     { path: 'navbar', component: NavbarComponent },
     { path: 'footer', component: FooterComponent },
-    { path: '', pathMatch: 'full', redirectTo: 'main-page'}
+    { path: '', pathMatch: 'full', redirectTo: 'main-page'},
+    // { path: 'movies-series-about/:id', component: MoviesSeriesAboutComponent }
 ];

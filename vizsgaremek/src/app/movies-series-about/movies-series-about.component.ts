@@ -16,7 +16,7 @@ export class MoviesSeriesAboutComponent implements OnInit {
   ngOnInit(): void {
     this.route.params.subscribe(params => {
       const id = params['id'];
-      this.http.get(`https://egyedirobi.moriczcloud.hu/vizsga-api/show-selected-show/${id}`)
+      this.http.get(`https://egyedirobi.moriczcloud.hu/vizsga-api/selected-show/${id}`)
         .subscribe(response => {
           this.selectedShow = response;
         });
