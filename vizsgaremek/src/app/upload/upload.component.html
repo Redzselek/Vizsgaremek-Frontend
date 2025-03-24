@@ -51,8 +51,8 @@
                 <label for="type" class="form-label">Type</label>
                 <select id="type" formControlName="type" class="form-select" required>
                     <option value="">Select Type</option>
-                    <option value="film">Movie</option>
-                    <option value="sorozat">Series</option>
+                    <option value="movie">Movie</option>
+                    <option value="series">Series</option>
                 </select>
                 <div *ngIf="uploadForm.get('type')?.invalid && uploadForm.get('type')?.touched"
                     class="upload-error-message">
@@ -60,7 +60,7 @@
                 </div>
             </div>
 
-            <div class="row" *ngIf="uploadForm.get('type')?.value === 'sorozat'">
+            <div class="row" *ngIf="uploadForm.get('type')?.value === 'series'">
                 <div class="col-md-6 mb-3">
                     <label for="season" class="form-label">Season</label>
                     <input type="number" id="season" formControlName="season" class="form-control" min="1">
