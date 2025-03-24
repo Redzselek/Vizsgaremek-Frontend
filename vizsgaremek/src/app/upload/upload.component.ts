@@ -135,12 +135,12 @@ export class UploadComponent implements OnInit {
     const token = localStorage.getItem('auth_token');
     
     // Set up headers with authentication
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`
-    });
+    // const headers = new HttpHeaders({
+    //   'Authorization': `Bearer ${token}`
+    // });
     
     // Send the request to the backend
-    this.http.post('https://egyedirobi.moriczcloud.hu/vizsga-api/upload-show', formData, { headers })
+    this.http.post('https://egyedirobi.moriczcloud.hu/vizsga-api/upload-show', formData)
       .subscribe({
         next: (response: any) => {
           this.isSubmitting = false;
