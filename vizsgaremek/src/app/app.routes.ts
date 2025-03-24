@@ -7,6 +7,7 @@ import { LoginPageComponent } from './login-page/login-page.component';
 import { RegisterPageComponent } from './register-page/register-page.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { FooterComponent } from './footer/footer.component';
+import { UploadComponent } from './upload/upload.component';
 
 export const routes: Routes = [
     { path: 'main-page', component: MainPageComponent },
@@ -17,5 +18,6 @@ export const routes: Routes = [
     { path: 'register', component: RegisterPageComponent },
     { path: 'navbar', component: NavbarComponent },
     { path: 'footer', component: FooterComponent },
+    { path: 'upload', component: UploadComponent },
     { path: '', pathMatch: 'full', redirectTo: 'main-page'}
 ];
