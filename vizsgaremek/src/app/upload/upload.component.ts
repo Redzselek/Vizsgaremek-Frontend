@@ -144,14 +144,12 @@ export class UploadComponent implements OnInit {
       .subscribe({
         next: (response: any) => {
           this.isSubmitting = false;
-          this.successMessage = 'Show uploaded successfully!';
+          this.successMessage = 'Show uploaded successfully! Status: 200 OK';
           this.uploadForm.reset();
           this.selectedFile = null;
           this.imagePreview = null;
-          this.categories = []; // Kategóriák törlése sikeres feltöltés után
-          // this.inputValue = '';
-          
-          // Navigate to the shows page after a short delay
+          this.categories = []; 
+
           setTimeout(() => {
             this.router.navigate(['/movies-series']);
           }, 2000);
