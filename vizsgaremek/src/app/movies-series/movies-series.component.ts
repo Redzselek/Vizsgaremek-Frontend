@@ -7,7 +7,7 @@ interface Show {
   id: number;
   title: string;
   description: string;
-  category: string[];
+  category: string[] | string;
   type: string;
   image_url: string;
 }
@@ -37,6 +37,7 @@ export class MoviesSeriesComponent implements OnInit {
   ngOnInit() {
     this.fetchShows();
   }
+  
   showDetails($id: number) {
     this.router.navigate(['/movies-series-about', $id]);
   }
@@ -52,6 +53,8 @@ export class MoviesSeriesComponent implements OnInit {
       next: (response) => {
         if (response.status === 'success') {
           this.shows = response.data.shows;
+          // Kategóriák feldolgozása
+          this.processShowCategories();
         }
         this.isLoading = false;
       },
@@ -59,6 +62,43 @@ export class MoviesSeriesComponent implements OnInit {
         console.error('Error fetching shows:', err);
         this.error = 'Nem sikerült betölteni a filmeket és sorozatokat. Kérjük, próbálja újra később.';
         this.isLoading = false;
+      }
+    });
+  }
+
+  // Segédfüggvények a kategóriák kezeléséhez
+  isArray(obj: any): boolean {
+    return Array.isArray(obj);
+  }
+
+  getCategoryArray(category: string[] | string): string[] {
+    if (Array.isArray(category)) {
+      return category;
+    } else if (typeof category === 'string') {
+      try {
+        // Próbáljuk meg JSON-ként értelmezni, ha string
+        const parsed = JSON.parse(category);
+        return Array.isArray(parsed) ? parsed : [category];
+      } catch (e) {
+        // Ha nem sikerül JSON-ként értelmezni, akkor egyszerű string
+        return [category];
+      }
+    }
+    return [];
+  }
+
+  // Kategóriák feldolgozása minden show-hoz
+  processShowCategories() {
+    this.shows.forEach(show => {
+      if (typeof show.category === 'string' && show.category) {
+        try {
+          const parsed = JSON.parse(show.category);
+          show.category = Array.isArray(parsed) ? parsed : [show.category];
+        } catch (e) {
+          // Ha nem sikerül JSON-ként értelmezni, hagyjuk stringként
+        }
+      } else if (!show.category) {
+        show.category = [];
       }
     });
   }

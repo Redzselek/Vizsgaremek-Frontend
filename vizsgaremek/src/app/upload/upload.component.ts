@@ -70,9 +70,9 @@ export class UploadComponent implements OnInit {
         return;
       }
       
-      // Validate file size (15MB max)
-      if (file.size > 15 * 1024 * 1024) {
-        this.fileError = 'File is too large. Maximum size is 15MB.';
+      // Validate file size (5MB max)
+      if (file.size > 5 * 1024 * 1024) {
+        this.fileError = 'File is too large. Maximum size is 5MB.';
         this.selectedFile = null;
         this.imagePreview = null;
         return;
