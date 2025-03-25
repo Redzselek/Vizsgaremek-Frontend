@@ -51,7 +51,14 @@ export class MoviesSeriesAboutComponent implements OnInit {
       .subscribe({
         next: (response) => {
           if (response && response.data) {
-            this.selectedShow = response.data;
+            const showData = { ...response.data };
+            
+            // Parse the category JSON string to an array
+            if (typeof showData.category === 'string') {
+              showData.category = JSON.parse(showData.category);
+            }
+            
+            this.selectedShow = showData;
           }
           this.isLoading = false;
         },
