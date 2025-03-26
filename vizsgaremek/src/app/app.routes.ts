@@ -19,5 +19,5 @@ export const routes: Routes = [
     { path: 'navbar', component: NavbarComponent },
     { path: 'footer', component: FooterComponent },
     { path: 'upload', component: UploadComponent },
-    { path: '', pathMatch: 'full', redirectTo: 'main-page'}
+    { path: '', pathMatch: 'full', redirectTo: 'about-profile'}
 ];
