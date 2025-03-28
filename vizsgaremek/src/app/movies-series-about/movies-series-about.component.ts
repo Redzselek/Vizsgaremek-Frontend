@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { CommentsComponent } from "../comments/comments.component";
 
 interface Show {
   id: number;
@@ -25,7 +26,7 @@ interface ApiResponse {
 @Component({
   selector: 'app-movies-series-about',
   standalone: true,
-  imports: [CommonModule, HttpClientModule, RouterModule],
+  imports: [CommonModule, HttpClientModule, RouterModule, CommentsComponent],
   templateUrl: './movies-series-about.component.html',
   styleUrls: ['./movies-series-about.component.css']
 })
@@ -65,18 +66,25 @@ export class MoviesSeriesAboutComponent implements OnInit {
     this.isLoading = true;
     this.error = null;
     
-    this.http.get<ApiResponse>(`https://egyedirobi.moriczcloud.hu/vizsga-api/selected-show/${this.movieId}`, {
+    this.http.post<ApiResponse>(`https://egyedirobi.moriczcloud.hu/vizsga-api/selected-show/${this.movieId}`, {}, {
       withCredentials: true
     })
     .subscribe({
       next: (response) => {
-        if (response.status === 'success') {
+        if (response.status === 'success' && response.data && response.data.show) {
           this.show = response.data.show;
           
           // Kategóriák feldolgozása, ha szükséges
           this.show.category = this.getCategoryArray(this.show.category);
+          
+          // 1 másodperces mesterséges késleltetés a betöltéshez
+          setTimeout(() => {
+            this.isLoading = false;
+          }, 1000);
+        } else {
+          this.error = 'Hiányzó vagy érvénytelen adatok a szervertől.';
+          this.isLoading = false;
         }
-        this.isLoading = false;
       },
       error: (err) => {
         console.error('Error fetching show details:', err);

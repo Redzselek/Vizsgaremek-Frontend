@@ -10,7 +10,7 @@
     {{ error }}
   </div>
 
-  <div *ngIf="!isLoading && !error">
+  <div *ngIf="!isLoading && !error && show">
     <!-- Cím szekció -->
     <div class="row mb-3">
       <div class="col-12">
@@ -62,48 +62,12 @@
           </div>
         </div>
   
-        <!-- Népszerűség -->
-        <!-- <div class="stats-card mb-3">
-          <h6 class="text-secondary mb-2">POPULARITY</h6>
-          <div class="d-flex align-items-center justify-content-center">
-            <i class="fas fa-arrow-down text-danger me-2"></i>
-            <h4 class="mb-0">182 <span class="text-secondary">▾ 106</span></h4>
-          </div>
-        </div> -->
-  
-        <!-- Videók és Fotók -->
-        <!-- <div class="stats-card mb-3">
-          <div class="d-flex align-items-center justify-content-center">
-            <i class="fas fa-video me-2 fa-2x"></i>
-            <h4 class="mb-0">3 VIDEOS</h4>
-          </div>
-        </div>
-  
-        <div class="stats-card mb-3">
-          <div class="d-flex align-items-center justify-content-center">
-            <i class="fas fa-image me-2 fa-2x"></i>
-            <h4 class="mb-0">98 PHOTOS</h4>
-          </div>
-        </div> -->
-  
         <!-- Watchlist gomb -->
         <button class="btn btn-dark w-100 mb-3">
           <i class="bi bi-plus-circle me-2"></i> Hozzáadás a Watchlisthez
         </button>
-        <!-- <p class="text-center text-secondary">Added by 32.9K users</p> -->
-  
-        <!-- Értékelések -->
-        <!-- 
-        <div class="d-flex justify-content-between mb-3">
-          <div>
-            <h5>115</h5>
-            <p class="text-secondary">User reviews</p>
-          </div>
-          <div>
-            <h5>17</h5>
-            <p class="text-secondary">Critic reviews</p>
-          </div>
-        </div> -->
+      </div>
+      <app-comments></app-comments>
     </div>
   </div>
 </div>
