@@ -71,11 +71,26 @@ export class MoviesSeriesAboutComponent implements OnInit {
     })
     .subscribe({
       next: (response) => {
+        // Teljes válasz logolása
+        console.log('API válasz:', response);
+        
         if (response.status === 'success' && response.data && response.data.show) {
           this.show = response.data.show;
           
           // Kategóriák feldolgozása, ha szükséges
           this.show.category = this.getCategoryArray(this.show.category);
+          
+          // Logoljuk a show adatait
+          console.log('Betöltött film/sorozat adatok:', {
+            id: this.show.id,
+            title: this.show.title,
+            description: this.show.description,
+            category: this.show.category,
+            type: this.show.type,
+            image_url: this.show.image_url,
+            rating: this.show.rating,
+            rating_count: this.show.rating_count
+          });
           
           // 1 másodperces mesterséges késleltetés a betöltéshez
           setTimeout(() => {
