@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
+import { RouterModule } from '@angular/router';
 
 interface Show {
   id: number;
@@ -23,7 +25,7 @@ interface ApiResponse {
 @Component({
   selector: 'app-movies-series',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './movies-series.component.html',
   styleUrls: ['./movies-series.component.css']
 })

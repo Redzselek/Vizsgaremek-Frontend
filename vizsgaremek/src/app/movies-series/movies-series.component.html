@@ -10,8 +10,10 @@
                         <div>
                             <span class="badge bg-primary me-1" *ngFor="let cat of getCategoryArray(show.category)">{{cat}}</span>
                         </div>
-                        <span class="badge bg-secondary">{{show.type}}</span>
-                        <button (click)="showDetails(show.id)" type="button" class="btn btn-dark border">Részletek</button>
+                        <div class="d-flex flex-column align-items-end">
+                            <span class="badge bg-secondary mb-2">{{show.type}}</span>
+                            <button [routerLink]="['/movies-series-about', show.id]" type="button" class="btn btn-dark border">Részletek</button>
+                        </div>
                     </div>
                 </div>
             </div>

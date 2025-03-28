@@ -14,7 +14,7 @@
     <!-- Cím szekció -->
     <div class="row mb-3">
       <div class="col-12">
-        <h1>{{ selectedShow.title }}</h1>
+        <h1>{{ show.title }}</h1>
       </div>
     </div>
   
@@ -23,18 +23,18 @@
       <!-- Bal oldali oszlop: Poszter és trailer -->
       <div class="col-md-8">
         <div class="movie-poster mb-3">
-          <img [src]="'https://egyedirobi.moriczcloud.hu/uploads/vizsga/' + selectedShow.image_url" style="max-height: 500px;" [alt]="selectedShow.title" class="img-fluid rounded">
+          <img [src]="'/uploads/vizsga/' + show.image_url" style="max-height: 500px;" [alt]="show.title" class="img-fluid rounded">
         </div>
   
         <!-- Műfajok -->
         <div class="mb-3">
-          <span class="badge bg-primary me-1" *ngFor="let cat of selectedShow.category">{{cat}}</span>
-          <span class="badge bg-secondary ms-2">{{selectedShow.type}}</span>
+          <span class="badge bg-primary me-1" *ngFor="let cat of getCategoryArray(show.category)">{{cat}}</span>
+          <span class="badge bg-secondary ms-2">{{show.type}}</span>
         </div>
   
         <!-- Leírás -->
         <div class="mb-4">
-          <p class="description">{{ selectedShow.description }}</p>
+          <p class="description">{{ show.description }}</p>
         </div>
   
       </div>
@@ -47,8 +47,8 @@
           <div class="d-flex align-items-center justify-content-center">
             <i class="bi bi-star-fill text-warning me-2 fs-4"></i>
             <div>
-              <h4 class="mb-0">{{ selectedShow.rating || 'N/A' }}<span class="text-secondary" *ngIf="selectedShow.rating">/10</span></h4>
-              <small class="text-secondary" *ngIf="selectedShow.rating_count">{{ selectedShow.rating_count }}K</small>
+              <h4 class="mb-0">{{ show.rating || 'N/A' }}<span class="text-secondary" *ngIf="show.rating">/10</span></h4>
+              <small class="text-secondary" *ngIf="show.rating_count">{{ show.rating_count }}K</small>
             </div>
           </div>
         </div>
