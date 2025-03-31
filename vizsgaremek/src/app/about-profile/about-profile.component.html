@@ -3,11 +3,11 @@
         <div class="col-md-12 p-3">
             <h1 class="fw-bold float-start">Your Profile</h1>
             <div class="float-end">
-                <button onclick="modalSettings()" type="button" class="btn btn-gear" data-bs-toggle="modal"
+                <button (click)="modalSettings()" type="button" class="btn btn-gear" data-bs-toggle="modal"
                     data-bs-target="#settingsModal">
                     <i class="fa-solid fa-gear fs-1"></i>
                 </button>
-                <button class="btn" type="button"><i class="fas fa-sign-out-alt fs-1 btn-logout"></i></button>
+                <button class="btn" type="button" (click)="logout()"><i class="fas fa-sign-out-alt fs-1 btn-logout"></i></button>
                 <div class="modal fade" id="settingsModal" tabindex="-1" aria-labelledby="settingsModalLabel"
                     aria-hidden="true">
                     <div class="modal-dialog">
@@ -20,14 +20,14 @@
                             <div class="modal-body">
                                 <div class="col-md-6 d-flex gap-2">
                                     <p>
-                                        <button onclick="checkExpand()" id="usernameBtn" class="btn settings-btn mb-2"
+                                        <button (click)="checkExpand($event)" id="usernameBtn" class="btn settings-btn mb-2"
                                             type="button" data-bs-toggle="collapse" data-bs-target="#collapseUsername"
                                             aria-expanded="false" aria-controls="collapseUsername">
                                             Username
                                         </button>
                                     </p>
                                     <p>
-                                        <button onclick="checkExpand()" id="passwordBtn" class="btn settings-btn mb-2"
+                                        <button (click)="checkExpand($event)" id="passwordBtn" class="btn settings-btn mb-2"
                                             type="button" data-bs-toggle="collapse" data-bs-target="#collapsePassword"
                                             aria-expanded="false" aria-controls="collapsePassword">
                                             Password
@@ -122,64 +122,3 @@
         </div>
     </div>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-element-bundle.min.js"></script>
-<script>
-    const swiperEl = document.querySelector('swiper-container')
-    Object.assign(swiperEl, {
-        slidesPerView: 1,
-        spaceBetween: 10,
-        breakpoints: {
-            640: {
-                slidesPerView: 2,
-                spaceBetween: 20,
-            },
-            768: {
-                slidesPerView: 3,
-                spaceBetween: 200,
-            },
-            1024: {
-                slidesPerView: 4,
-                spaceBetween: 260,
-            },
-            1440: {
-                slidesPerView: 5,
-                spaceBetween: 200,
-            },
-        },
-    });
-    swiperEl.initialize();
-    function modalSettings() {
-        var usernameBtn = document.getElementById('usernameBtn');
-        var collapseUsername = document.getElementById('collapseUsername');
-        if (collapseUsername.classList.contains('show')) {
-            usernameBtn.setAttribute('aria-expanded', 'true');
-            collapseUsername.classList.add('show');
-        }
-    }
-    function checkExpand() {
-        var usernameBtn = document.getElementById('usernameBtn');
-        var passwordBtn = document.getElementById('passwordBtn');
-        var collapseUsername = document.getElementById('collapseUsername');
-        var collapsePassword = document.getElementById('collapsePassword');
-
-        if (usernameBtn === event.target) {
-            if (collapseUsername.classList.contains('show')) {
-                // nem csinál semmit, ha ugyanarra kattintunk
-            } else {
-                usernameBtn.setAttribute('aria-expanded', 'true');
-                collapseUsername.classList.add('show');
-                collapsePassword.classList.remove('show');
-                passwordBtn.setAttribute('aria-expanded', 'false');
-            }
-        } else if (passwordBtn === event.target) {
-            if (collapsePassword.classList.contains('show')) {
-                // nem csinál semmit, ha ugyanarra kattintunk
-            } else {
-                passwordBtn.setAttribute('aria-expanded', 'true');
-                collapsePassword.classList.add('show');
-                collapseUsername.classList.remove('show');
-                usernameBtn.setAttribute('aria-expanded', 'false');
-            }
-        }
-    }
-</script>
