@@ -140,7 +140,7 @@ export class UploadComponent implements OnInit {
     // });
 
     // Send the request to the backend
-    this.http.post('http://egyedirobi.moriczcloud.hu/vizsga-api/upload-show', formData)
+    this.http.post('https://egyedirobi.moriczcloud.hu/vizsga-api/upload-show', formData)
       .subscribe({
         next: (response: any) => {
           this.isSubmitting = false;
