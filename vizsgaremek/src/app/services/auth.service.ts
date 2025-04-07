@@ -1,6 +1,6 @@
 import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { BehaviorSubject, Observable, throwError } from 'rxjs';
+import { BehaviorSubject, forkJoin, Observable, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { isPlatformBrowser } from '@angular/common';
@@ -12,7 +12,7 @@ export class AuthService {
   private apiUrl = 'https://egyedirobi.moriczcloud.hu'; // Backend URL
   private userSubject = new BehaviorSubject<any>(null);
   public user$ = this.userSubject.asObservable();
-  
+
   constructor(
     private http: HttpClient,
     private router: Router,
@@ -52,10 +52,10 @@ export class AuthService {
    * Register method
    */
   register(name: string, email: string, password: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/vizsga-api/register`, { 
-      name, 
-      email, 
-      password 
+    return this.http.post(`${this.apiUrl}/vizsga-api/register`, {
+      name,
+      email,
+      password
     }, {
       withCredentials: true
     }).pipe(
@@ -116,7 +116,7 @@ export class AuthService {
     if (!isPlatformBrowser(this.platformId)) {
       return; // Skip this in server-side rendering
     }
-    
+
     this.http.get(`${this.apiUrl}/vizsga-api/user`, {
       withCredentials: true,
       headers: this.getAuthHeaders()
@@ -142,7 +142,7 @@ export class AuthService {
    */
   private getAuthHeaders(): HttpHeaders {
     let headers = new HttpHeaders();
-    
+
     // Check if running in browser environment
     if (isPlatformBrowser(this.platformId)) {
       const token = localStorage.getItem('auth_token');
@@ -150,14 +150,70 @@ export class AuthService {
         headers = headers.set('Authorization', `Bearer ${token}`);
       }
     }
-    
+
     return headers;
   }
   /**
-   * Get authenticated users bookmarks
+   * Get authenticated users watchlist
    */
-  getUserBookmarks(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/vizsga-api/get-watchlist`, {
+  getUserWatchlist(): Observable<any> {
+    return this.http.post(`${this.apiUrl}/vizsga-api/get-watchlist`, {
+      withCredentials: true,
+      headers: this.getAuthHeaders()
+    }).pipe(
+      tap(user => {
+        this.userSubject.next({ isLoggedIn: true, ...user });
+      }),
+      catchError(error => {
+        console.error('Error fetching user data:', error);
+        return throwError(() => error);
+      })
+    );
+  }
+  /**
+   * Remove authenticated users watchlist
+   */
+  removeFromWatchlist(showid: number): Observable<any> {
+    return this.http.post(`${this.apiUrl}/vizsga-api/remove-watchlist/${showid}`, {
+      withCredentials: true,
+      headers: this.getAuthHeaders()
+    }).pipe(
+      tap(user => {
+        this.userSubject.next({ isLoggedIn: true, ...user });
+      }),
+      catchError(error => {
+        console.error('Error fetching user data:', error);
+        return throwError(() => error);
+      })
+    );
+  }
+  /**
+  * Get authenticated users uploads
+  */
+  getUserUploads(): Observable<any> {
+    const movies = this.http.get(`${this.apiUrl}/vizsga-api/show-movies`, {
+      withCredentials: true,
+      headers: this.getAuthHeaders()
+    });
+    const series = this.http.get(`${this.apiUrl}/vizsga-api/show-series`, {
+      withCredentials: true,
+      headers: this.getAuthHeaders()
+    });
+    return forkJoin([movies, series]).pipe(
+      tap(([movies, series]) => {
+        this.userSubject.next({ isLoggedIn: true, ...movies, ...series });
+      }),
+      catchError(error => {
+        console.error('Error fetching data:', error);
+        return throwError(() => error);
+      })
+    );
+  }
+  /**
+  * Remove authenticated users uploads
+  */
+  removeFromUploads(showid: number): Observable<any> {
+    return this.http.post(`${this.apiUrl}/vizsga-api/delete-show/${showid}`, {
       withCredentials: true,
       headers: this.getAuthHeaders()
     }).pipe(

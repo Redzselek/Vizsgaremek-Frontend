@@ -4,17 +4,20 @@ import { Component, OnInit, AfterViewInit, ElementRef } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
 import { DataService } from '../data.service';
+import { EditUploadComponent } from '../edit-upload/edit-upload.component';
 
 @Component({
   selector: 'app-about-profile',
   standalone: true,
-  imports: [CommonModule, HttpClientModule],
+  imports: [CommonModule, HttpClientModule, EditUploadComponent],
   templateUrl: './about-profile.component.html',
   styleUrls: ['./about-profile.component.css']
 })
 export class AboutProfileComponent
   implements OnInit, AfterViewInit {
-  user: any = null;
+  user: any = {};
+  userWatchlist: any = {};
+  userUploads: any = {};
   loading: boolean = true;
   error: string | null = null;
 
@@ -26,11 +29,81 @@ export class AboutProfileComponent
   ) { }
 
   ngOnInit() {
-    this.fetchUserData();
+    this.fetchUserData();;
   }
 
   ngAfterViewInit() {
     this.initializeSwiper();
+  }
+
+  fetchUserData() {
+    this.loading = true;
+    this.error = null;
+
+    this.authService.getUserInfo().subscribe({
+      next: (userData) => {
+        this.user = userData;
+        this.loading = false;
+      },
+      error: (err) => {
+        this.error = 'Nem sikerült betölteni a felhasználói adatokat. Kérjük, jelentkezzen be újra.';
+        this.loading = false;
+        console.error('Error fetching user data:', err);
+
+        // Redirect to login if not authenticated
+        setTimeout(() => {
+          this.router.navigate(['/login']);
+        }, 2000);
+      }
+    });
+    this.authService.getUserWatchlist().subscribe({
+      next: (userWatchlist) => {
+        this.userWatchlist = userWatchlist.data;
+      },
+      error: (err) => {
+        console.error('Error fetching user data:', err);
+      }
+    });
+    this.authService.getUserUploads().subscribe({
+      next: (userUploads) => {
+        this.userUploads = userUploads;
+      },
+      error: (err) => {
+        console.error('Error fetching user data:', err);
+      }
+    });
+  }
+
+  removeFromWatchlist(showid: number) {
+    this.authService.removeFromWatchlist(showid).subscribe({
+      next: () => {
+        this.fetchUserData();
+      },
+      error: (err) => {
+        console.error('Error removing show from watchlist:', err);
+      }
+    });
+  }
+
+  showDetails($id: number) {
+    this.router.navigate(['/movies-series-about', $id]);
+  }
+
+  logout() {
+    this.authService.logout().subscribe({
+      next: () => {
+        // Update data service state
+        this.dataService.logout();
+        // Navigate to login page
+        this.router.navigate(['/login']);
+      },
+      error: (err) => {
+        console.error('Logout error:', err);
+        // Even if there's an error, we'll still clear local state and redirect
+        this.dataService.logout();
+        this.router.navigate(['/login']);
+      }
+    });
   }
 
   initializeSwiper() {
@@ -65,7 +138,7 @@ export class AboutProfileComponent
   modalSettings() {
     const usernameBtn = this.elementRef.nativeElement.querySelector('#usernameBtn');
     const collapseUsername = this.elementRef.nativeElement.querySelector('#collapseUsername');
-    
+
     if (collapseUsername && collapseUsername.classList.contains('show') && usernameBtn) {
       usernameBtn.setAttribute('aria-expanded', 'true');
       collapseUsername.classList.add('show');
@@ -101,44 +174,5 @@ export class AboutProfileComponent
         usernameBtn.setAttribute('aria-expanded', 'false');
       }
     }
-  }
-
-  fetchUserData() {
-    this.loading = true;
-    this.error = null;
-
-    this.authService.getUserInfo().subscribe({
-      next: (userData) => {
-        this.user = userData;
-        this.loading = false;
-      },
-      error: (err) => {
-        this.error = 'Nem sikerült betölteni a felhasználói adatokat. Kérjük, jelentkezzen be újra.';
-        this.loading = false;
-        console.error('Error fetching user data:', err);
-
-        // Redirect to login if not authenticated
-        setTimeout(() => {
-          this.router.navigate(['/login']);
-        }, 2000);
-      }
-    });
-  }
-
-  logout() {
-    this.authService.logout().subscribe({
-      next: () => {
-        // Update data service state
-        this.dataService.logout();
-        // Navigate to login page
-        this.router.navigate(['/login']);
-      },
-      error: (err) => {
-        console.error('Logout error:', err);
-        // Even if there's an error, we'll still clear local state and redirect
-        this.dataService.logout();
-        this.router.navigate(['/login']);
-      }
-    });
   }
 }

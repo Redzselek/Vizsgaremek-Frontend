@@ -1,74 +1,88 @@
-.uploads-text{
+.uploads-text {
   text-align: center;
   background-color: rgb(55, 55, 55);
   border-top-left-radius: 15px;
   border-top-right-radius: 15px;
   padding: 10px;
   margin-bottom: 5px;
-  border: 1px solid rgb(85,85,85);
+  border: 1px solid rgb(85, 85, 85);
 }
-.fa-btn{
+
+.fa-btn {
   padding: 0;
   border: none;
   background-color: rgb(55, 55, 55);
 }
-.user-uploads{
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
+
+.user-uploads {
+  display: block;
   background-color: rgb(55, 55, 55);
-  border: 1px solid rgb(85,85,85);
+  border: 1px solid rgb(85, 85, 85);
   border-bottom-right-radius: 15px;
   border-bottom-left-radius: 15px;
 }
-.user-uploads p{
+
+.user-upload {
+  text-align: center;
   margin-bottom: 0px;
 }
-.fa-pen-to-square:hover{
+
+.fa-pen-to-square:hover {
   color: rgb(100, 220, 90);
 }
-.fa-square-minus:hover{
+
+.fa-square-minus:hover {
   color: rgb(220, 100, 90);
 }
-.settings-btn{
+
+.settings-btn {
   padding: 10px 20px;
   background-color: white;
   border-radius: 15px;
   color: rgba(33, 37, 41, 1);
   font-weight: 600;
 }
-.settings-btn:hover{
-  background-color: rgb(55, 55, 55)!important;
+
+.settings-btn:hover {
+  background-color: rgb(55, 55, 55) !important;
 }
+
 .settings-btn[aria-expanded="true"] {
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
-  background-color: rgb(55, 55, 55)!important;
-  border: 1px solid rgb(85,85,85);
+  background-color: rgb(55, 55, 55) !important;
+  border: 1px solid rgb(85, 85, 85);
   color: white;
 }
-.btn-account:hover{
-  background-color: rgb(185, 35, 35)!important;
+
+.btn-account:hover {
+  background-color: rgb(185, 35, 35) !important;
 }
-.btn-logout:hover{
+
+.btn-logout:hover {
   color: red;
 }
-.btn-gear{
+
+.btn-gear {
   transition: all 0.2s ease-in-out;
 }
-.btn-gear:hover{
+
+.btn-gear:hover {
   transform: rotate(25deg);
   transition: all 0.2s ease-in-out;
 }
-.card{
+
+.card {
   background-color: rgb(55, 55, 55);
   border-bottom-left-radius: 15px;
   border-bottom-right-radius: 15px;
 }
-p{
+
+p {
   margin-bottom: 0;
 }
-.userEditInputs{
+
+.userEditInputs {
   background-color: rgb(55, 55, 55);
   border: none;
   border-bottom: 1px solid white;
@@ -76,46 +90,53 @@ p{
   color: white;
   font-size: 25px;
 }
-.userEditInputs:focus{
+
+.userEditInputs:focus {
   border-bottom: 2px solid white;
   outline: none;
 }
-.bookmarkContainer{
+
+.bookmarkContainer {
   position: relative;
   white-space: nowrap;
   padding-bottom: 15px;
 }
-.bookmarks{
+
+.bookmarks {
   display: flex;
   flex-direction: row;
 }
-.card{
+
+.card {
   position: relative;
   flex: 0 0 auto;
   width: 18rem;
 }
-.collapse{
+
+.collapse {
   background-color: rgb(55, 55, 55);
 }
-.showSettings{
+
+.showSettings {
   transition: none;
   background-color: rgb(55, 55, 55);
 }
+
 swiper-container {
-width: 100%;
-height: 100%;
+  width: 100%;
+  height: 100%;
 }
 
 swiper-slide {
-text-align: center;
-display: flex;
-justify-content: center;
-align-items: center;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 swiper-slide img {
-display: block;
-width: 100%;
-height: 100%;
-object-fit: cover;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }

@@ -10,35 +10,36 @@
     {{ error }}
   </div>
 
-  <div *ngIf="!isLoading && !error && show">
+  <div *ngIf="!isLoading && !error">
     <!-- Cím szekció -->
     <div class="row mb-3">
       <div class="col-12">
-        <h1>{{ show.title }}</h1>
+        <h1>{{ selectedShow.title }}</h1>
       </div>
     </div>
-  
+
     <!-- Fő tartalom szekció -->
     <div class="row">
       <!-- Bal oldali oszlop: Poszter és trailer -->
       <div class="col-md-8">
         <div class="movie-poster mb-3">
-          <img [src]="'/uploads/vizsga/' + show.image_url" style="max-height: 500px;" [alt]="show.title" class="img-fluid rounded">
+          <img [src]="'https://egyedirobi.moriczcloud.hu/uploads/vizsga/' + selectedShow.image_url"
+            style="max-height: 500px;" [alt]="selectedShow.title" class="img-fluid rounded">
         </div>
-  
+
         <!-- Műfajok -->
         <div class="mb-3">
-          <span class="badge bg-primary me-1" *ngFor="let cat of getCategoryArray(show.category)">{{cat}}</span>
-          <span class="badge bg-secondary ms-2">{{show.type}}</span>
+          <span class="badge bg-primary me-1" *ngFor="let cat of selectedShow.category">{{cat}}</span>
+          <span class="badge bg-secondary ms-2">{{selectedShow.type}}</span>
         </div>
-  
+
         <!-- Leírás -->
         <div class="mb-4">
-          <p class="description">{{ show.description }}</p>
+          <p class="description">{{ selectedShow.description }}</p>
         </div>
-  
+
       </div>
-  
+
       <!-- Jobb oldali oszlop: Értékelések és statisztikák -->
       <div class="col-md-4">
         <!-- Értékelés -->
@@ -47,12 +48,13 @@
           <div class="d-flex align-items-center justify-content-center">
             <i class="bi bi-star-fill text-warning me-2 fs-4"></i>
             <div>
-              <h4 class="mb-0">{{ show.rating || 'N/A' }}<span class="text-secondary" *ngIf="show.rating">/10</span></h4>
-              <small class="text-secondary" *ngIf="show.rating_count">{{ show.rating_count }}K</small>
+              <h4 class="mb-0">{{ selectedShow.rating || 'N/A' }}<span class="text-secondary"
+                  *ngIf="selectedShow.rating">/10</span></h4>
+              <small class="text-secondary" *ngIf="selectedShow.rating_count">{{ selectedShow.rating_count }}K</small>
             </div>
           </div>
         </div>
-  
+
         <!-- Felhasználói értékelés -->
         <div class="stats-card mb-3 p-3 border rounded">
           <h6 class="text-secondary mb-2">SAJÁT ÉRTÉKELÉS</h6>
@@ -61,13 +63,49 @@
             <h4 class="mb-0">Rate</h4>
           </div>
         </div>
-  
+
+        <!-- Népszerűség -->
+        <!-- <div class="stats-card mb-3">
+          <h6 class="text-secondary mb-2">POPULARITY</h6>
+          <div class="d-flex align-items-center justify-content-center">
+            <i class="fas fa-arrow-down text-danger me-2"></i>
+            <h4 class="mb-0">182 <span class="text-secondary">▾ 106</span></h4>
+          </div>
+        </div> -->
+
+        <!-- Videók és Fotók -->
+        <!-- <div class="stats-card mb-3">
+          <div class="d-flex align-items-center justify-content-center">
+            <i class="fas fa-video me-2 fa-2x"></i>
+            <h4 class="mb-0">3 VIDEOS</h4>
+          </div>
+        </div>
+
+        <div class="stats-card mb-3">
+          <div class="d-flex align-items-center justify-content-center">
+            <i class="fas fa-image me-2 fa-2x"></i>
+            <h4 class="mb-0">98 PHOTOS</h4>
+          </div>
+        </div> -->
+
         <!-- Watchlist gomb -->
         <button class="btn btn-dark w-100 mb-3">
           <i class="bi bi-plus-circle me-2"></i> Hozzáadás a Watchlisthez
         </button>
+        <!-- <p class="text-center text-secondary">Added by 32.9K users</p> -->
+
+        <!-- Értékelések -->
+        <!--
+        <div class="d-flex justify-content-between mb-3">
+          <div>
+            <h5>115</h5>
+            <p class="text-secondary">User reviews</p>
+          </div>
+          <div>
+            <h5>17</h5>
+            <p class="text-secondary">Critic reviews</p>
+          </div>
+        </div> -->
       </div>
-      <app-comments></app-comments>
     </div>
   </div>
-</div>

@@ -3,15 +3,15 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, FormsModule } from '@angular/forms';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { AuthService } from '../services/auth.service';
 
 @Component({
-  selector: 'app-upload',
-  standalone: true,
+  selector: 'app-edit-upload',
   imports: [CommonModule, ReactiveFormsModule, FormsModule],
-  templateUrl: './upload.component.html',
-  styleUrls: ['./upload.component.css']
+  templateUrl: './edit-upload.component.html',
+  styleUrl: './edit-upload.component.css'
 })
-export class UploadComponent implements OnInit {
+export class EditUploadComponent implements OnInit {
   uploadForm!: FormGroup;
   selectedFile: File | null = null;
   imagePreview: string | null = null;
@@ -19,14 +19,16 @@ export class UploadComponent implements OnInit {
   successMessage = '';
   errorMessage = '';
   fileError = '';
+  userUploads: any = {};
 
   constructor(
+    private authService: AuthService,
     private formBuilder: FormBuilder,
     private http: HttpClient,
     private router: Router
   ) { }
 
-  ngOnInit(): void {
+  ngOnInit() {
     this.initForm();
     this.updateAvailableCategories();
   }
@@ -40,7 +42,14 @@ export class UploadComponent implements OnInit {
       season: [null],
       episode: [null]
     });
-
+    this.authService.getUserUploads().subscribe({
+      next: (userUploads) => {
+        this.userUploads = userUploads;
+      },
+      error: (err) => {
+        console.error('Error fetching user data:', err);
+      }
+    });
     // Listen for changes to the type field to handle conditional validation
     this.uploadForm.get('type')?.valueChanges.subscribe(type => {
       if (type === 'sorozat') {
@@ -55,43 +64,18 @@ export class UploadComponent implements OnInit {
     });
   }
 
-  onFileChange(event: Event): void {
-    const input = event.target as HTMLInputElement;
-
-    if (input.files && input.files.length) {
-      const file = input.files[0];
-
-      // Validate file type
-      const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
-      if (!validTypes.includes(file.type)) {
-        this.fileError = 'Invalid file type. Please upload JPG, JPEG, PNG, or WEBP.';
-        this.selectedFile = null;
-        this.imagePreview = null;
-        return;
+  removeFromUploads(showid: number) {
+    this.authService.removeFromUploads(showid).subscribe({
+      next: () => {
+        this.initForm();
+      },
+      error: (err) => {
+        console.error('Error removing show from uploads:', err);
       }
-
-      // Validate file size (5MB max)
-      if (file.size > 5 * 1024 * 1024) {
-        this.fileError = 'File is too large. Maximum size is 5MB.';
-        this.selectedFile = null;
-        this.imagePreview = null;
-        return;
-      }
-
-      this.fileError = '';
-      this.selectedFile = file;
-
-      // Create image preview
-      const reader = new FileReader();
-      reader.onload = () => {
-        this.imagePreview = reader.result as string;
-      };
-      reader.readAsDataURL(file);
-    }
+    });
   }
-
   onSubmit(): void {
-    if (this.uploadForm.invalid || !this.selectedFile) {
+    if (this.uploadForm.invalid) {
       // Mark all fields as touched to trigger validation messages
       Object.keys(this.uploadForm.controls).forEach(key => {
         this.uploadForm.get(key)?.markAsTouched();
@@ -129,7 +113,7 @@ export class UploadComponent implements OnInit {
       formData.append('episode', '');
     }
 
-    formData.append('file', this.selectedFile);
+    formData.append('file', this.selectedFile!);
 
     // Get auth token from localStorage
     const token = localStorage.getItem('auth_token');
@@ -140,7 +124,7 @@ export class UploadComponent implements OnInit {
     // });
 
     // Send the request to the backend
-    this.http.post('http://egyedirobi.moriczcloud.hu/vizsga-api/upload-show', formData)
+    this.http.post('http://egyedirobi.moriczcloud.hu/vizsga-api/update-show', formData)
       .subscribe({
         next: (response: any) => {
           this.isSubmitting = false;
@@ -187,6 +171,41 @@ export class UploadComponent implements OnInit {
   categories: string[] = [];
   selectedCategory = '';
   availableCategories: string[] = [];
+
+  onFileChange(event: Event): void {
+    const input = event.target as HTMLInputElement;
+
+    if (input.files && input.files.length) {
+      const file = input.files[0];
+
+      // Validate file type
+      const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+      if (!validTypes.includes(file.type)) {
+        this.fileError = 'Invalid file type. Please upload JPG, JPEG, PNG, or WEBP.';
+        this.selectedFile = null;
+        this.imagePreview = null;
+        return;
+      }
+
+      // Validate file size (5MB max)
+      if (file.size > 5 * 1024 * 1024) {
+        this.fileError = 'File is too large. Maximum size is 5MB.';
+        this.selectedFile = null;
+        this.imagePreview = null;
+        return;
+      }
+
+      this.fileError = '';
+      this.selectedFile = file;
+
+      // Create image preview
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.imagePreview = reader.result as string;
+      };
+      reader.readAsDataURL(file);
+    }
+  }
 
   updateAvailableCategories(): void {
     // Csak azokat a kategóriákat jelenítjük meg, amelyek még nincsenek kiválasztva

@@ -1,3 +1,54 @@
+.uploads-text {
+  text-align: center;
+  background-color: rgb(55, 55, 55);
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+  padding: 10px;
+  margin-bottom: 5px;
+  border: 1px solid rgb(85, 85, 85);
+}
+
+.fa-btn {
+  padding: 0;
+  border: none;
+  background-color: rgb(55, 55, 55);
+}
+
+.user-uploads {
+  display: block;
+  background-color: rgb(55, 55, 55);
+  border: 1px solid rgb(85, 85, 85);
+  border-bottom-right-radius: 15px;
+  border-bottom-left-radius: 15px;
+}
+
+.user-upload {
+  text-align: center;
+  margin-bottom: 0px;
+}
+
+.fa-pen-to-square:hover {
+  color: rgb(100, 220, 90);
+}
+
+.fa-square-minus:hover {
+  color: rgb(220, 100, 90);
+}
+
+.userEditInputs {
+  background-color: rgb(55, 55, 55);
+  border: none;
+  border-bottom: 1px solid white;
+  border-radius: 0;
+  color: white;
+  font-size: 25px;
+}
+
+.userEditInputs:focus {
+  border-bottom: 2px solid white;
+  outline: none;
+}
+
 .upload-container {
   padding: 30px 0;
   max-width: 800px;
