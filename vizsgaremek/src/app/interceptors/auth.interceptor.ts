@@ -24,7 +24,10 @@ export class AuthInterceptor implements HttpInterceptor {
     request = request.clone({ withCredentials: true });
 
     // Get token from localStorage
-    const token = localStorage.getItem('auth_token');
+    let token = null;
+    if (typeof window !== 'undefined' && window.localStorage) {
+      token = window.localStorage.getItem('auth_token');
+    }
     
     // If token exists, add it to the Authorization header
     if (token) {
@@ -40,7 +43,9 @@ export class AuthInterceptor implements HttpInterceptor {
         // If 401 Unauthorized error, redirect to login page
         if (error.status === 401) {
           // Clear token from localStorage
-          localStorage.removeItem('auth_token');
+          if (typeof window !== 'undefined' && window.localStorage) {
+            window.localStorage.removeItem('auth_token');
+          }
           
           // Update authentication state
           this.dataService.logout();

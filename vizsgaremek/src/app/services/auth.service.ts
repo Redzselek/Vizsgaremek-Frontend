@@ -209,6 +209,20 @@ export class AuthService {
       })
     );
   }
+  getSelectedShow(showid: number): Observable<any> {
+    return this.http.get(`${this.apiUrl}/vizsga-api/selected-show/${showid}`, {
+      withCredentials: true,
+      headers: this.getAuthHeaders()
+    }).pipe(
+      tap(user => {
+        this.userSubject.next({ isLoggedIn: true, ...user });
+      }),
+      catchError(error => {
+        console.error('Error fetching user data:', error);
+        return throwError(() => error);
+      })
+    );
+  }
   /**
   * Remove authenticated users uploads
   */

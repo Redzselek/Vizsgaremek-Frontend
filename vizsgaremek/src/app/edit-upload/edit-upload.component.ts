@@ -1,9 +1,19 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, FormsModule } from '@angular/forms';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
+
+interface UploadForm {
+  id: number | null;
+  title: string;
+  description: string;
+  category: any;
+  type: string;
+  season: number | null;
+  episode: number | null;
+}
 
 @Component({
   selector: 'app-edit-upload',
@@ -25,26 +35,30 @@ export class EditUploadComponent implements OnInit {
     private authService: AuthService,
     private formBuilder: FormBuilder,
     private http: HttpClient,
-    private router: Router
+    private router: Router,
   ) { }
 
   ngOnInit() {
     this.initForm();
-    this.updateAvailableCategories();
+    this.getCategories();
   }
 
   initForm(): void {
-    this.uploadForm = this.formBuilder.group({
-      title: ['', [Validators.required]],
-      description: ['', [Validators.required]],
-      category: [''],
-      type: ['', [Validators.required]],
-      season: [null],
-      episode: [null]
+    this.uploadForm = this.formBuilder.group<UploadForm>({
+      id: null,
+      title: '',
+      description: '',
+      category: [],
+      type: '',
+      season: null,
+      episode: null
     });
     this.authService.getUserUploads().subscribe({
-      next: (userUploads) => {
-        this.userUploads = userUploads;
+      next: (response) => {
+        if (response) {
+          const listShows = { ...response };
+          this.userUploads = listShows;
+        }
       },
       error: (err) => {
         console.error('Error fetching user data:', err);
@@ -62,6 +76,25 @@ export class EditUploadComponent implements OnInit {
       this.uploadForm.get('season')?.updateValueAndValidity();
       this.uploadForm.get('episode')?.updateValueAndValidity();
     });
+  }
+
+  openModal(showid: number) {
+    this.authService.getSelectedShow(showid).subscribe({
+      next: (response) => {
+        if (response) {
+          const showData = { ...response };
+          this.uploadForm.patchValue({
+            id: showData.id,
+            title: showData.title,
+            description: showData.description,
+            category: JSON.parse(showData.category),
+            type: showData.type,
+            season: showData.season,
+            episode: showData.episode
+          });
+        }
+      },
+    })
   }
 
   removeFromUploads(showid: number) {
@@ -87,33 +120,36 @@ export class EditUploadComponent implements OnInit {
 
       return;
     }
+    console.log(this.uploadForm.get('category')?.value);
 
     this.isSubmitting = true;
     this.successMessage = '';
     this.errorMessage = '';
 
     const formData = new FormData();
+    formData.append('id', this.uploadForm.get('id')?.value);
     formData.append('title', this.uploadForm.get('title')?.value);
     formData.append('description', this.uploadForm.get('description')?.value);
 
     // Használjuk a kategóriák tömböt JSON formátumban
     if (this.categories.length > 0) {
       formData.append('category', this.getCategoriesJson());
-    } else {
-      formData.append('category', this.uploadForm.get('category')?.value || '');
-    }
-
+    } else formData.append('category', this.getFormCategories());
     formData.append('type', this.uploadForm.get('type')?.value);
 
-    if (this.uploadForm.get('type')?.value === 'sorozat') {
+    if (this.uploadForm.get('type')?.value === 'series') {
       formData.append('season', this.uploadForm.get('season')?.value);
       formData.append('episode', this.uploadForm.get('episode')?.value);
     } else {
-      formData.append('season', '');
-      formData.append('episode', '');
+      formData.append('season', "1");
+      formData.append('episode', "0");
     }
 
-    formData.append('file', this.selectedFile!);
+    if (!this.selectedFile === null) {
+      formData.append('file', this.selectedFile!);
+    }
+
+
 
     // Get auth token from localStorage
     const token = localStorage.getItem('auth_token');
@@ -141,6 +177,10 @@ export class EditUploadComponent implements OnInit {
         error: (error) => {
           this.isSubmitting = false;
 
+          console.error(error);
+
+
+
           if (error.status === 422) {
             // Validation errors
             if (error.error && error.error.errors) {
@@ -163,14 +203,76 @@ export class EditUploadComponent implements OnInit {
       });
   }
 
-  predefinedCategories: string[] = ['Action', 'Animation', 'Bollywood', 'Crime', 'Family', 'Cyberpunk', 'Dystopian', 'Documentary', 'Drama', 'Biography',
-    'Experimental', 'Fantasy', 'Adult', 'Film-Noir', 'Gastronomy', 'Gangster', 'Kids', 'War', 'Horror', 'Adventure',
-    'Disaster', 'Spy', 'Ghost', 'Mystery', 'Personal Life', 'Thriller', 'Musical', 'Neo-Noir', 'Occult',
-    'Political', 'Post-Apocalyptic', 'Psychological', 'Road Movie', 'Romantic', 'Sci-Fantasy', 'Sci-Fi', 'Satire', 'Superhero',
-    'Steampunk', 'Sports', 'Dance', 'Social', 'Suspense', 'Historical', 'Survival', 'Comedy', 'Western', 'Music', 'Genre Parody'];
-  categories: string[] = [];
+  predefinedCategories: any[] = [];
+  categories: any[] = [];
   selectedCategory = '';
-  availableCategories: string[] = [];
+  availableCategories: any[] = [];
+  categoriesJson: string = '';
+  categoriesForm: string = '';
+
+  getCategories() {
+    this.http.get('https://egyedirobi.moriczcloud.hu/vizsga-api/get-categories').subscribe({
+      next: (response: any) => {
+        this.predefinedCategories = response;
+        this.updateAvailableCategories();
+      },
+      error: (error) => {
+        console.error('Error fetching categories:', error);
+      }
+    });
+  }
+
+  getCategoryNames(categoryIds: number[]): string[] {
+    if (!categoryIds) {
+      return [];
+    }
+    return categoryIds.map(id => this.predefinedCategories.find(cat => cat.id === id)?.category);
+  }
+
+  updateAvailableCategories(): void {
+    this.availableCategories = this.predefinedCategories.filter(
+      category => !this.categories.includes(category)
+    );
+  }
+
+  addSelectedCategory(): void {
+    if (this.selectedCategory && !this.categories.includes(this.selectedCategory) && this.categories.length < 5) {
+      const categoryName = this.getCategoryNames([parseInt(this.selectedCategory)])[0];
+      this.categories.push({ id: this.selectedCategory, category: categoryName });
+      this.selectedCategory = '';
+      this.updateAvailableCategories();
+    }
+  }
+
+  removeCategory(index: number): void {
+    this.categories.splice(index, 1);
+    this.updateAvailableCategories();
+  }
+
+  getCategoriesJson(): string {
+    this.categoriesJson = '[';
+    for (let i = 0; i < this.categories.length; i++) {
+      if (i > 0) {
+        this.categoriesJson += ',';
+      }
+      this.categoriesJson += this.categories[i].id;
+    }
+    this.categoriesJson += ']';
+    return this.categoriesJson;
+  }
+
+  getFormCategories(){
+    this.categoriesForm = '[';
+    for (let i = 0; i < this.uploadForm.value.category.length; i++) {
+      if (i > 0) {
+        this.categoriesForm += ',';
+      }
+      this.categoriesForm += this.uploadForm.get('category')?.value[i];
+    }
+    this.categoriesForm += ']';
+    console.log(this.categoriesForm);
+    return this.categoriesForm;
+  }
 
   onFileChange(event: Event): void {
     const input = event.target as HTMLInputElement;
@@ -205,29 +307,5 @@ export class EditUploadComponent implements OnInit {
       };
       reader.readAsDataURL(file);
     }
-  }
-
-  updateAvailableCategories(): void {
-    // Csak azokat a kategóriákat jelenítjük meg, amelyek még nincsenek kiválasztva
-    this.availableCategories = this.predefinedCategories.filter(
-      category => !this.categories.includes(category)
-    );
-  }
-
-  addSelectedCategory(): void {
-    if (this.selectedCategory && !this.categories.includes(this.selectedCategory) && this.categories.length < 5) {
-      this.categories.push(this.selectedCategory);
-      this.selectedCategory = '';
-      this.updateAvailableCategories();
-    }
-  }
-
-  removeCategory(index: number): void {
-    this.categories.splice(index, 1);
-    this.updateAvailableCategories();
-  }
-
-  getCategoriesJson(): string {
-    return JSON.stringify(this.categories);
   }
 }

@@ -1,0 +1,23 @@
+<div class="nav-link">
+    <div class="d-flex align-items-center">
+        <input type="text" class="form-control" placeholder="Search" [(ngModel)]="searchQuery" (input)="search(searchQuery)" (focus)="search(searchQuery)">
+    </div>
+</div>
+
+<div *ngIf="searchResults && searchResults.length > 0" class="search-results mt-2">
+    <div class="list-group">
+        <a *ngFor="let result of searchResults" class="list-group-item list-group-item-action"
+            [routerLink]="['/movies-series-about', result.id]" (click)="clearSearch()">
+            <div class="d-flex align-items-center">
+                <img [src]="'https://egyedirobi.moriczcloud.hu/uploads/vizsga/' + result.image_url" class="me-3" style="height: 5em; width: auto;">
+                <div>
+                    <h3 class="mb-1">{{result.title}}</h3>
+                    <div class="d-flex align-items-center">
+                        <p class="badge bg-secondary me-2">{{result.type}}</p>
+                        <p class="badge bg-warning text-dark">★ {{result.rating }}</p>
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div>
+</div>

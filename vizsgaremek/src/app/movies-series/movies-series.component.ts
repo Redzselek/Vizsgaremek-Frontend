@@ -2,8 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { ActivatedRoute } from '@angular/router';
-import { RouterModule } from '@angular/router';
 
 interface Show {
   id: number;
@@ -25,7 +23,7 @@ interface ApiResponse {
 @Component({
   selector: 'app-movies-series',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule],
   templateUrl: './movies-series.component.html',
   styleUrls: ['./movies-series.component.css']
 })
@@ -34,12 +32,12 @@ export class MoviesSeriesComponent implements OnInit {
   isLoading: boolean = true;
   error: string | null = null;
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(private http: HttpClient, private router: Router) { }
 
   ngOnInit() {
     this.fetchShows();
   }
-  
+
   showDetails($id: number) {
     this.router.navigate(['/movies-series-about', $id]);
   }
@@ -51,21 +49,22 @@ export class MoviesSeriesComponent implements OnInit {
     this.http.get<ApiResponse>('https://egyedirobi.moriczcloud.hu/vizsga-api/dashboard', {
       withCredentials: true
     })
-    .subscribe({
-      next: (response) => {
-        if (response.status === 'success') {
-          this.shows = response.data.shows;
-          // Kategóriák feldolgozása
-          this.processShowCategories();
+      .subscribe({
+        next: (response) => {
+          if (response.status === 'success') {
+            this.shows = response.data.shows;
+
+            // Kategóriák feldolgozása
+            this.processShowCategories();
+          }
+          this.isLoading = false;
+        },
+        error: (err) => {
+          console.error('Error fetching shows:', err);
+          this.error = 'Nem sikerült betölteni a filmeket és sorozatokat. Kérjük, próbálja újra később.';
+          this.isLoading = false;
         }
-        this.isLoading = false;
-      },
-      error: (err) => {
-        console.error('Error fetching shows:', err);
-        this.error = 'Nem sikerült betölteni a filmeket és sorozatokat. Kérjük, próbálja újra később.';
-        this.isLoading = false;
-      }
-    });
+      });
   }
 
   // Segédfüggvények a kategóriák kezeléséhez

@@ -1,17 +1,25 @@
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { Component, OnInit, AfterViewInit, ElementRef } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ElementRef, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
 import { DataService } from '../data.service';
 import { EditUploadComponent } from '../edit-upload/edit-upload.component';
+
+// Register Swiper custom elements
+declare global {
+  interface Window {
+    Swiper: any;
+  }
+}
 
 @Component({
   selector: 'app-about-profile',
   standalone: true,
   imports: [CommonModule, HttpClientModule, EditUploadComponent],
   templateUrl: './about-profile.component.html',
-  styleUrls: ['./about-profile.component.css']
+  styleUrls: ['./about-profile.component.css'],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class AboutProfileComponent
   implements OnInit, AfterViewInit {
@@ -29,7 +37,13 @@ export class AboutProfileComponent
   ) { }
 
   ngOnInit() {
-    this.fetchUserData();;
+    this.fetchUserData();
+    
+    // Add Swiper script to the document
+    const swiperScript = document.createElement('script');
+    swiperScript.src = 'https://cdn.jsdelivr.net/npm/swiper@11/swiper-element-bundle.min.js';
+    swiperScript.async = true;
+    document.head.appendChild(swiperScript);
   }
 
   ngAfterViewInit() {
@@ -107,32 +121,52 @@ export class AboutProfileComponent
   }
 
   initializeSwiper() {
-    const swiperEl = this.elementRef.nativeElement.querySelector('swiper-container');
-    if (swiperEl) {
-      Object.assign(swiperEl, {
-        slidesPerView: 1,
-        spaceBetween: 10,
-        breakpoints: {
-          640: {
+    // Wait for the Swiper script to load and DOM to be ready
+    setTimeout(() => {
+      const swiperEl = this.elementRef.nativeElement.querySelector('#watchlistSwiper');
+      if (swiperEl) {
+        // Set default properties
+        swiperEl.slidesPerView = 3;
+        swiperEl.spaceBetween = 10;
+        swiperEl.navigation = true;
+        
+        // Set breakpoints properly
+        swiperEl.breakpoints = {
+          
+          '140': {
+            slidesPerView: 1,
+            spaceBetween: 0,
+          },
+          '640': {
+            slidesPerView: 1,
+            spaceBetween: 20,
+          },
+          '670': {
+            slidesPerView: 1,
+            spaceBetween: 10,
+          },
+          '769': {
+            slidesPerView: 2,
+            spaceBetween: 50,
+          },
+          '990':{
             slidesPerView: 2,
             spaceBetween: 20,
           },
-          768: {
+          '1024': {
             slidesPerView: 3,
-            spaceBetween: 200,
+            spaceBetween: 60,
           },
-          1024: {
+          '1440': {
             slidesPerView: 4,
-            spaceBetween: 260,
+            spaceBetween: 20,
           },
-          1440: {
-            slidesPerView: 5,
-            spaceBetween: 200,
-          },
-        },
-      });
-      swiperEl.initialize();
-    }
+        };
+        
+        // Initialize the swiper
+        swiperEl.initialize();
+      }
+    }, 1000); // Give it some time to ensure the script is loaded
   }
 
   modalSettings() {

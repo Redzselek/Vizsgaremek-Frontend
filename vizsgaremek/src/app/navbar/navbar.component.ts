@@ -8,10 +8,11 @@ import { Emitters } from '../emitters/emitters';
 import { Router } from '@angular/router';
 import { DataService } from '../data.service';
 import { AuthService } from '../services/auth.service';
+import { SearchBarComponent } from "../search-bar/search-bar.component";
 
 @Component({
   selector: 'app-navbar',
-  imports: [RouterLink, FontAwesomeModule, HttpClientModule, CommonModule, RouterLink],
+  imports: [RouterLink, FontAwesomeModule, HttpClientModule, CommonModule, RouterLink, SearchBarComponent],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css'
 })

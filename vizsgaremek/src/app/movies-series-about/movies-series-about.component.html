@@ -23,8 +23,7 @@
       <!-- Bal oldali oszlop: Poszter és trailer -->
       <div class="col-md-8">
         <div class="movie-poster mb-3">
-          <img [src]="'https://egyedirobi.moriczcloud.hu/uploads/vizsga/' + selectedShow.image_url"
-            style="max-height: 500px;" [alt]="selectedShow.title" class="img-fluid rounded">
+          <img [src]="'https://egyedirobi.moriczcloud.hu/uploads/vizsga/' + selectedShow.image_url" style="max-height: 500px;" [alt]="selectedShow.title" class="img-fluid rounded">
         </div>
 
         <!-- Műfajok -->
@@ -48,8 +47,7 @@
           <div class="d-flex align-items-center justify-content-center">
             <i class="bi bi-star-fill text-warning me-2 fs-4"></i>
             <div>
-              <h4 class="mb-0">{{ selectedShow.rating || 'N/A' }}<span class="text-secondary"
-                  *ngIf="selectedShow.rating">/10</span></h4>
+              <h4 class="mb-0">{{ selectedShow.rating || 'N/A' }}<span class="text-secondary" *ngIf="selectedShow.rating">/10</span></h4>
               <small class="text-secondary" *ngIf="selectedShow.rating_count">{{ selectedShow.rating_count }}K</small>
             </div>
           </div>
@@ -106,6 +104,6 @@
             <p class="text-secondary">Critic reviews</p>
           </div>
         </div> -->
-      </div>
     </div>
   </div>
+</div>
