@@ -136,7 +136,7 @@ export class AuthService {
   isLoggedIn(): boolean {
     return this.userSubject.value !== null;
   }
-
+  
   /**
    * Get authentication headers with token if available
    */
@@ -236,6 +236,21 @@ export class AuthService {
       }),
       catchError(error => {
         console.error('Error fetching user data:', error);
+        return throwError(() => error);
+      })
+    );
+  }
+
+
+  changePassword(currentPassword: string, newPassword: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/vizsga-api/new-password`, {
+      oldPassword: currentPassword,
+      newPassword
+    }, {
+      withCredentials: true
+    }).pipe(
+      catchError(error => {
+        console.error('Error changing password:', error);
         return throwError(() => error);
       })
     );

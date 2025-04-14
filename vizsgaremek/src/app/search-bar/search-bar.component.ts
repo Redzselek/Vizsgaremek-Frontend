@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component } from '@angular/core';
+import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -22,7 +22,17 @@ export interface SearchApiResponse {
 
 
 export class SearchBarComponent {
+  @ViewChild('searchContainer') searchContainer!: ElementRef;
+  
   constructor(private http: HttpClient) { }
+  
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent) {
+    // Check if click was outside the search container
+    if (this.searchContainer && !this.searchContainer.nativeElement.contains(event.target)) {
+      this.clearSearch();
+    }
+  }
   searchQuery: string = "";
   searchResults: SearchApiResponse[] = [];
 
@@ -36,7 +46,6 @@ export class SearchBarComponent {
       this.searchResults = [];
       return;
     }
-    
     this.http.post<SearchApiResponse[]>('https://egyedirobi.moriczcloud.hu/vizsga-api/search', {
       search: query
     }, {
@@ -57,18 +66,20 @@ export class SearchBarComponent {
   }
   
   fetchRating(showId: number) {
-    this.http.get<{success: boolean, average_rating: number}>(`https://egyedirobi.moriczcloud.hu/vizsga-api/avg-rating/${showId}`, {
-      withCredentials: true
-    }).subscribe({
-      next: (response) => {
-        const resultIndex = this.searchResults.findIndex(result => result.id === showId);
-        if (resultIndex !== -1 && response.success) {
-          this.searchResults[resultIndex].rating = response.average_rating;
+    this.http.get<any>('https://egyedirobi.moriczcloud.hu/vizsga-api/avg-rating/' + showId)
+      .subscribe({
+        next: (response) => {
+          if (response) {
+            const showData = { ...response };
+            const show = this.searchResults.find(result => result.id === showId);
+            if (show) {
+              show.rating = showData.average_rating;
+            }
+          }
+        },
+        error: (err) => {
+          console.error('Error fetching show details:', err);
         }
-      },
-      error: (error) => {
-        console.error(`Error fetching rating for show ID ${showId}:`, error);
-      }
-    });
+      });
   }
 }

@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 import { Component, OnInit, AfterViewInit, ElementRef, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
 import { DataService } from '../data.service';
@@ -16,7 +17,7 @@ declare global {
 @Component({
   selector: 'app-about-profile',
   standalone: true,
-  imports: [CommonModule, HttpClientModule, EditUploadComponent],
+  imports: [CommonModule, HttpClientModule, FormsModule, EditUploadComponent],
   templateUrl: './about-profile.component.html',
   styleUrls: ['./about-profile.component.css'],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
@@ -28,6 +29,17 @@ export class AboutProfileComponent
   userUploads: any = {};
   loading: boolean = true;
   error: string | null = null;
+  
+  // Password change properties
+  currentPassword: string = '';
+  newPassword: string = '';
+  confirmPassword: string = '';
+  showCurrentPassword: boolean = false;
+  showNewPassword: boolean = false;
+  showConfirmPassword: boolean = false;
+  isChangingPassword: boolean = false;
+  passwordError: string | null = null;
+  passwordSuccess: string | null = null;
 
   constructor(
     private authService: AuthService,
@@ -60,7 +72,7 @@ export class AboutProfileComponent
         this.loading = false;
       },
       error: (err) => {
-        this.error = 'Nem sikerült betölteni a felhasználói adatokat. Kérjük, jelentkezzen be újra.';
+        this.error = 'Failed to load user data. Please log in again.';
         this.loading = false;
         console.error('Error fetching user data:', err);
 
@@ -179,34 +191,75 @@ export class AboutProfileComponent
     }
   }
 
-  checkExpand(event: Event) {
-    const usernameBtn = this.elementRef.nativeElement.querySelector('#usernameBtn');
-    const passwordBtn = this.elementRef.nativeElement.querySelector('#passwordBtn');
-    const collapseUsername = this.elementRef.nativeElement.querySelector('#collapseUsername');
-    const collapsePassword = this.elementRef.nativeElement.querySelector('#collapsePassword');
+  // checkExpand(event: Event) {
+  //   const usernameBtn = this.elementRef.nativeElement.querySelector('#usernameBtn');
+  //   const passwordBtn = this.elementRef.nativeElement.querySelector('#passwordBtn');
+  //   const collapseUsername = this.elementRef.nativeElement.querySelector('#collapseUsername');
+  //   const collapsePassword = this.elementRef.nativeElement.querySelector('#collapsePassword');
 
-    if (!usernameBtn || !passwordBtn || !collapseUsername || !collapsePassword) {
+  //   if (!usernameBtn || !passwordBtn || !collapseUsername || !collapsePassword) {
+  //     return;
+  //   }
+
+  //   if (usernameBtn === event.target) {
+  //     if (collapseUsername.classList.contains('show')) {
+  //       // nem csinál semmit, ha ugyanarra kattintunk
+  //     } else {
+  //       usernameBtn.setAttribute('aria-expanded', 'true');
+  //       collapseUsername.classList.add('show');
+  //       collapsePassword.classList.remove('show');
+  //       passwordBtn.setAttribute('aria-expanded', 'false');
+  //     }
+  //   } else if (passwordBtn === event.target) {
+  //     if (collapsePassword.classList.contains('show')) {
+  //       // nem csinál semmit, ha ugyanarra kattintunk
+  //     } else {
+  //       passwordBtn.setAttribute('aria-expanded', 'true');
+  //       collapsePassword.classList.add('show');
+  //       collapseUsername.classList.remove('show');
+  //       usernameBtn.setAttribute('aria-expanded', 'false');
+  //     }
+  //   }
+  // }
+
+  changePassword() {
+    this.isChangingPassword = true;
+    this.passwordError = null;
+    this.passwordSuccess = null;
+
+    // Validate passwords match
+    if (this.newPassword !== this.confirmPassword) {
+      this.passwordError = 'Passwords do not match';
+      this.isChangingPassword = false;
       return;
     }
 
-    if (usernameBtn === event.target) {
-      if (collapseUsername.classList.contains('show')) {
-        // nem csinál semmit, ha ugyanarra kattintunk
-      } else {
-        usernameBtn.setAttribute('aria-expanded', 'true');
-        collapseUsername.classList.add('show');
-        collapsePassword.classList.remove('show');
-        passwordBtn.setAttribute('aria-expanded', 'false');
+    // Call API to change password
+    this.authService.changePassword(this.currentPassword, this.newPassword).subscribe({
+      next: (response: any) => {
+        this.passwordSuccess = 'Password changed successfully! You will be logged out.';
+        this.isChangingPassword = false;
+        
+        // Clear form
+        this.currentPassword = '';
+        this.newPassword = '';
+        this.confirmPassword = '';
+        setTimeout(() => {
+        // Close the modal almost instantly using DOM API
+        const closeButton = document.querySelector('#settingsModal .btn-close') as HTMLElement;
+        if (closeButton) {
+          closeButton.click();
+        }
+        
+        // Logout after a very short delay
+        
+          this.logout();
+        }, 2000);
+      },
+      error: (error: any) => {
+        this.passwordError = error.error?.message || 'Failed to change password. Please try again.';
+        this.isChangingPassword = false;
       }
-    } else if (passwordBtn === event.target) {
-      if (collapsePassword.classList.contains('show')) {
-        // nem csinál semmit, ha ugyanarra kattintunk
-      } else {
-        passwordBtn.setAttribute('aria-expanded', 'true');
-        collapsePassword.classList.add('show');
-        collapseUsername.classList.remove('show');
-        usernameBtn.setAttribute('aria-expanded', 'false');
-      }
-    }
+    });
   }
 }

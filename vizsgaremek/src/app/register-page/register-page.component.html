@@ -1,47 +1,60 @@
 <div class="container mt-4 mb-4 p-5 border rounded">
-  <h2 class="mb-4">Regisztráció</h2>
+  <h2 class="mb-4">Registration</h2>
   <form (ngSubmit)="onSubmit()" #registerForm="ngForm">
     <div class="mb-3">
-      <label for="name" class="form-label">Felhasználónév</label>
+      <label for="name" class="form-label">Username</label>
       <input type="text" class="form-control" id="name" name="name" [(ngModel)]="name" required #nameModel="ngModel"
         [class.is-invalid]="nameModel.invalid && (nameModel.dirty || nameModel.touched)">
       <div class="invalid-feedback" *ngIf="nameModel.invalid && (nameModel.dirty || nameModel.touched)">
-        <div *ngIf="nameModel.errors?.['required']">Felhasználónév megadása kötelező</div>
+        <div *ngIf="nameModel.errors?.['required']">Username is required</div>
       </div>
     </div>
     <div class="mb-3">
-      <label for="email" class="form-label">Email cím</label>
+      <label for="email" class="form-label">Email address</label>
       <input type="email" class="form-control" id="email" name="email" [(ngModel)]="email" required email
         #emailModel="ngModel" [class.is-invalid]="emailModel.invalid && (emailModel.dirty || emailModel.touched)">
       <div class="invalid-feedback" *ngIf="emailModel.invalid && (emailModel.dirty || emailModel.touched)">
-        <div *ngIf="emailModel.errors?.['required']">Email cím megadása kötelező</div>
-        <div *ngIf="emailModel.errors?.['email']">Érvénytelen email formátum</div>
+        <div *ngIf="emailModel.errors?.['required']">Email address is required</div>
+        <div *ngIf="emailModel.errors?.['email']">Invalid email format</div>
       </div>
-      <div id="emailHelp" class="form-text">Az email címét nem osztjuk meg harmadik féllel.</div>
+      <div id="emailHelp" class="form-text">We will never share your email with third parties.</div>
     </div>
     <div class="mb-3">
-      <label for="password" class="form-label">Jelszó</label>
-      <input type="password" class="form-control" id="password" name="password" [(ngModel)]="password" required
-        minlength="6" #passwordModel="ngModel"
-        [class.is-invalid]="passwordModel.invalid && (passwordModel.dirty || passwordModel.touched)">
+      <label for="password" class="form-label">Password</label>
+      <div class="input-group">
+        <input [type]="showPassword ? 'text' : 'password'" class="form-control" id="password" name="password" [(ngModel)]="password" required
+          minlength="6" #passwordModel="ngModel"
+          [class.is-invalid]="passwordModel.invalid && (passwordModel.dirty )">
+        <button class="btn btn-outline-secondary" type="button" (click)="showPassword = !showPassword">
+          <i class="bi" [ngClass]="showPassword ? 'bi-eye-slash' : 'bi-eye'"></i>
+        </button>
+      </div>
       <div class="invalid-feedback" *ngIf="passwordModel.invalid && (passwordModel.dirty || passwordModel.touched)">
-        <div *ngIf="passwordModel.errors?.['required']">Jelszó megadása kötelező</div>
-        <div *ngIf="passwordModel.errors?.['minlength']">A jelszónak legalább 6 karakter hosszúnak kell lennie</div>
+        <div *ngIf="passwordModel.errors?.['required']">Password is required</div>
+        <div *ngIf="passwordModel.errors?.['minlength']">Password must be at least 6 characters long</div>
       </div>
     </div>
-    <div class="mb-3 form-check">
-      <input type="checkbox" class="form-check-input" id="check" name="policyAccepted" [(ngModel)]="policyAccepted"
-        required #policyModel="ngModel"
-        [class.is-invalid]="policyModel.invalid && (policyModel.dirty || policyModel.touched)">
-      <label class="form-check-label" for="check">Elfogadom az <a href="#">Adatvédelmi szabályzatot</a></label>
-      <div class="invalid-feedback" *ngIf="policyModel.invalid && (policyModel.dirty || policyModel.touched)">
-        El kell fogadnia az adatvédelmi szabályzatot
+    <div class="mb-3">
+      <label for="confirmPassword" class="form-label">Confirm Password</label>
+      <div class="input-group">
+        <input [type]="showConfirmPassword ? 'text' : 'password'" class="form-control" id="confirmPassword" name="confirmPassword" [(ngModel)]="confirmPassword" required
+          #confirmPasswordModel="ngModel"
+          [class.is-invalid]="(confirmPasswordModel.invalid && (confirmPasswordModel.dirty || confirmPasswordModel.touched)) || (confirmPassword !== password && confirmPassword)">
+        <button class="btn btn-outline-secondary" type="button" (click)="showConfirmPassword = !showConfirmPassword">
+          <i class="bi" [ngClass]="showConfirmPassword ? 'bi-eye-slash' : 'bi-eye'"></i>
+        </button>
+      </div>
+      <div class="invalid-feedback" *ngIf="(confirmPasswordModel.invalid && (confirmPasswordModel.dirty || confirmPasswordModel.touched)) || (confirmPassword !== password && confirmPassword)">
+        <div *ngIf="confirmPasswordModel.errors?.['required']">Password confirmation is required</div>
+        <div *ngIf="confirmPassword !== password && confirmPassword">Passwords do not match</div>
       </div>
     </div>
-    <button type="submit" class="btn btn-dark border" [disabled]="registerForm.invalid || isLoading">
-      <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2"></span>
-      Regisztráció
-    </button>
+    <div class="d-flex justify-content-center mt-3">
+      <button type="submit" class="btn btn-primary rounded border" [disabled]="registerForm.invalid || isLoading">
+        <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2"></span>
+        Register
+      </button>
+    </div>
   </form>
 
   <div *ngIf="showSuccessAlert"

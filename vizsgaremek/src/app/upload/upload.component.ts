@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, FormsModule } from '@angular/forms';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { CategoryService } from '../services/category.service';
 
 @Component({
   selector: 'app-upload',
@@ -23,7 +24,8 @@ export class UploadComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private http: HttpClient,
-    private router: Router
+    private router: Router,
+    private categoryService: CategoryService
   ) { }
 
   ngOnInit(): void {
@@ -179,11 +181,10 @@ export class UploadComponent implements OnInit {
       });
   }
 
-  predefinedCategories: string[] = ['Action', 'Animation', 'Bollywood', 'Crime', 'Family', 'Cyberpunk', 'Dystopian', 'Documentary', 'Drama', 'Biography',
-    'Experimental', 'Fantasy', 'Adult', 'Film-Noir', 'Gastronomy', 'Gangster', 'Kids', 'War', 'Horror', 'Adventure',
-    'Disaster', 'Spy', 'Ghost', 'Mystery', 'Personal Life', 'Thriller', 'Musical', 'Neo-Noir', 'Occult',
-    'Political', 'Post-Apocalyptic', 'Psychological', 'Road Movie', 'Romantic', 'Sci-Fantasy', 'Sci-Fi', 'Satire', 'Superhero',
-    'Steampunk', 'Sports', 'Dance', 'Social', 'Suspense', 'Historical', 'Survival', 'Comedy', 'Western', 'Music', 'Genre Parody'];
+  // Get predefined categories from the category service
+  get predefinedCategories(): string[] {
+    return this.categoryService.getAllCategories();
+  }
   categories: string[] = [];
   selectedCategory = '';
   availableCategories: string[] = [];

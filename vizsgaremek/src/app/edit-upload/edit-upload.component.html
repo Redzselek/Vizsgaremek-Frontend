@@ -10,124 +10,131 @@
       </div>
       <div class="user-upload" *ngFor="let movie of userUploads[0]">
         {{ movie.title }}
-        <button class="fa-btn ms-3" type="button" (click)="openModal(movie.id)" data-bs-toggle="modal"
-          [attr.data-bs-target]="'#movieModal-' + movie.id">
+        <button class="fa-btn ms-3" type="button" data-bs-toggle="modal" [attr.data-bs-target]="'#' + movie.id" (click)="loadCategoriesForEdit(movie.category)">
           <i class="asd fa-solid fa-pen-to-square"></i>
         </button>
         <button (click)="removeFromUploads(movie.id)" class="fa-btn ms-3">
-          <i class="fa-solid fa-square-minus"></i>
+          <i class="fa-solid fa-trash"></i>
         </button>
-      </div>
-    </div>
-    <div class="modal fade" *ngFor="let movie of userUploads[0]" id="movieModal-{{ movie.id }}" tabindex="-1"
-      aria-labelledby="editMovieModal" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h1 class="modal-title fs-3" id="settingsModalLabel">
-              Edit {{ movie.title }}
-            </h1>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <form [formGroup]="uploadForm" (ngSubmit)="onSubmit()">
-              <div class="mb-3">
-                <label for="title" class="form-label">Title</label>
-                <input type="text" id="title" formControlName="title" class="form-control" required />
-                <div *ngIf="uploadForm.get('title')?.invalid && uploadForm.get('title')?.touched"
-                  class="upload-error-message">
-                  Title is required
-                </div>
+        <div class="modal fade" id="{{ movie.id }}" tabindex="-1" aria-labelledby="editMovieModal" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h1 class="modal-title fs-3" id="settingsModalLabel">
+                  Edit {{ movie.title }}
+                </h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
-              <div class="mb-3">
-                <label for="description" class="form-label">Description</label>
-                <textarea id="description" formControlName="description" class="form-control" rows="3"
-                  required></textarea>
-                <div *ngIf="uploadForm.get('description')?.invalid && uploadForm.get('description')?.touched"
-                  class="upload-error-message">
-                  Description is required
-                </div>
-              </div>
-              <div class="mb-3">
-                <label for="type" class="form-label">Type</label>
-                <select id="type" formControlName="type" class="form-select" required>
-                  <option value="">Select Type</option>
-                  <option [selected]="movie.type === 'movie'" value="movie">
-                    Movie
-                  </option>
-                  <option [selected]="movie.type === 'series'" value="series">
-                    Series
-                  </option>
-                </select>
-                <div *ngIf="
-                      uploadForm.get('type')?.invalid &&
-                      uploadForm.get('type')?.touched
-                    " class="upload-error-message">
-                  Type is required
-                </div>
-                <div class="row" *ngIf="uploadForm.get('type')?.value === 'series'">
-                  <div class="col-md-6 mb-3">
-                    <label for="season" class="form-label">Season</label>
-                    <input type="number" id="season" formControlName="season" class="form-control" min="1">
+              <div class="modal-body">
+                <div class="upload-container">
+                  <div class="upload-form-container">
+                    <div *ngIf="successMessage" class="upload-alert upload-alert-success">
+                      {{ successMessage }}
+                    </div>
+                    <div *ngIf="errorMessage" class="upload-alert upload-alert-danger">
+                      {{ errorMessage }}
+                    </div>
+                    <form [formGroup]="uploadForm" (ngSubmit)="onSubmit()">
+                      <div class="mb-3">
+                        <label for="title" class="form-label">Title</label>
+                        <input [value]="movie.title" type="text" id="title" formControlName="title" class="form-control rounded"
+                          [placeholder]="movie.title" required />
+                        <div *ngIf="
+                            uploadForm.get('title')?.invalid &&
+                            uploadForm.get('title')?.touched
+                          " class="upload-error-message rounded">
+                          Title is required
+                        </div>
+                      </div>
+                      <div class="mb-3">
+                        <label for="description" class="form-label">Description</label>
+                        <textarea id="description" formControlName="description" class="form-control rounded" rows="3"
+                          [placeholder]="movie.description" required></textarea>
+                        <div *ngIf="
+                            uploadForm.get('description')?.invalid &&
+                            uploadForm.get('description')?.touched
+                          " class="upload-error-message rounded">
+                          Description is required
+                        </div>
+                      </div>
+                      <div class="mb-3">
+                        <label for="categorySelect" class="form-label">Categories (max 5)</label>
+                        <div class="d-flex flex-wrap gap-2 mb-2">
+                          <span *ngFor="let category of categories; let i = index" class="badge bg-primary">
+                            {{ category }}
+                            <button type="button" class="btn-close btn-close-white ms-2"
+                              (click)="removeCategory(i)"></button>
+                          </span>
+                        </div>
+                        <select id="categorySelect" class="form-select rounded" [(ngModel)]="selectedCategory"
+                          [ngModelOptions]="{ standalone: true }" (change)="addSelectedCategory()"
+                          [disabled]="categories.length >= 5">
+                          <option value="" disabled selected>
+                            Select a category
+                          </option>
+                          <option *ngFor="let category of availableCategories" [value]="category">
+                            {{ category }}
+                          </option>
+                        </select>
+                        <small *ngIf="categories.length >= 5" class="text-danger">Maximum 5 categories allowed</small>
+                      </div>
+                      <div class="mb-3">
+                        <label for="type" class="form-label">Type</label>
+                        <select id="type" formControlName="type" class="form-select rounded" required>
+                          <option value="">Select Type</option>
+                          <option [selected]="movie.type === 'movie'" value="movie">
+                            Movie
+                          </option>
+                          <option [selected]="movie.type === 'series'" value="series">
+                            Series
+                          </option>
+                        </select>
+                        <div *ngIf="
+                            uploadForm.get('type')?.invalid &&
+                            uploadForm.get('type')?.touched
+                          " class="upload-error-message rounded">
+                          Type is required
+                        </div>
+                      </div>
+                      <div class="row" *ngIf="uploadForm.get('type')?.value === 'series'">
+                        <div class="col-md-6 mb-3">
+                          <label for="season" class="form-label">Season</label>
+                          <input type="number" id="season" formControlName="season" class="form-control rounded" min="1" />
+                        </div>
+                        <div class="col-md-6 mb-3">
+                          <label for="episode" class="form-label">Episode</label>
+                          <input type="number" id="episode" formControlName="episode" class="form-control rounded" min="1" />
+                        </div>
+                      </div>
+                      <div class="mb-3">
+                        <label for="file" class="form-label">Image</label>
+                        <input type="file" id="file" (change)="onFileChange($event)" class="form-control rounded"
+                          accept="image/jpeg,image/png,image/webp" />
+                        <div *ngIf="fileError" class="upload-error-message rounded">
+                          {{ fileError }}
+                        </div>
+                        <small class="upload-help-text">Supported formats: JPG, JPEG, PNG, WEBP. Max size:
+                          5MB</small>
+                      </div>
+                      <div class="upload-image-preview">
+                        <h3>Current Image</h3>
+                        <img [src]="'https://egyedirobi.moriczcloud.hu/uploads/vizsga/' + movie.image_url" alt="" class="rounded">
+                      </div>
+                      <div class="upload-image-preview" *ngIf="imagePreview">
+                        <h3>New Image</h3>
+                        <img [src]="imagePreview" alt="Preview" class="rounded" />
+                      </div>
+                      <button type="submit" [disabled]="
+                          uploadForm.invalid || isSubmitting
+                        " class="upload-button">
+                        <span *ngIf="isSubmitting">Editing...</span>
+                        <span *ngIf="!isSubmitting">Edit</span>
+                      </button>
+                    </form>
                   </div>
-                  <div class="col-md-6 mb-3">
-                    <label for="episode" class="form-label">Episode</label>
-                    <input type="number" id="episode" formControlName="episode" class="form-control" min="1">
-                  </div>
                 </div>
               </div>
-              <div class="mb-3">
-                <p *ngIf="uploadForm.get('category')?.value">
-                  Current Categories:
-                  <span class="badge bg-secondary me-1"
-                    *ngFor="let cat of getCategoryNames(uploadForm.get('category')?.value)">
-                    {{ cat }}
-                  </span>
-                </p>
-                <label for="categorySelect" class="form-label">Categories (max 5)</label>
-                <div class="d-flex flex-wrap gap-2 mb-2">
-                  <span *ngFor="let category of categories; let i = index" class="badge bg-primary">
-                    {{ category.category }}
-                    <button type="button" class="btn-close btn-close-white ms-2" (click)="removeCategory(i)"></button>
-                  </span>
-                </div>
-                <select id="categorySelect" class="form-select" [(ngModel)]="selectedCategory"
-                  [ngModelOptions]="{ standalone: true }" (change)="addSelectedCategory()"
-                  [disabled]="categories.length >= 5">
-                  <option value="" disabled selected>
-                    Select a category
-                  </option>
-                  <option *ngFor="let category of availableCategories" [value]="category.id">
-                    {{ category.category }}
-                  </option>
-                </select>
-                <small *ngIf="categories.length >= 5" class="text-danger">Maximum 5 categories allowed</small>
-              </div>
-              <div class="mb-3">
-                <label for="file" class="form-label">Image</label>
-                <input type="file" id="file" (change)="onFileChange($event)" class="form-control"
-                  accept="image/jpeg,image/png,image/webp" />
-                <div *ngIf="fileError" class="upload-error-message">
-                  {{ fileError }}
-                </div>
-                <small class="upload-help-text">Supported formats: JPG, JPEG, PNG, WEBP. Max size:
-                  5MB</small>
-                <div class="upload-image-preview">
-                  <h3>Current Image</h3>
-                  <img [src]="'https://egyedirobi.moriczcloud.hu/uploads/vizsga/' + movie.image_url" alt="">
-                </div>
-                <div class="upload-image-preview" *ngIf="imagePreview">
-                  <h3>New Image</h3>
-                  <img [src]="imagePreview" alt="Preview" />
-                </div>
-              </div>
-              <button type="submit" [disabled]="
-                    uploadForm.invalid || isSubmitting
-                  " class="upload-button">
-                <span *ngIf="isSubmitting">Editing...</span>
-                <span *ngIf="!isSubmitting">Edit</span>
-              </button>
-            </form>
+            </div>
           </div>
         </div>
       </div>
@@ -144,124 +151,131 @@
       </div>
       <div class="user-upload" *ngFor="let series of userUploads[1]">
         {{ series.title }}
-        <button class="fa-btn ms-3" type="button" (click)="openModal(series.id)" data-bs-toggle="modal"
-          [attr.data-bs-target]="'#movieModal-' + series.id">
+        <button class="fa-btn ms-3" type="button" data-bs-toggle="modal" [attr.data-bs-target]="'#' + series.id" (click)="loadCategoriesForEdit(series.category)">
           <i class="asd fa-solid fa-pen-to-square"></i>
         </button>
         <button (click)="removeFromUploads(series.id)" class="fa-btn ms-3">
-          <i class="fa-solid fa-square-minus"></i>
+          <i class="fa-solid fa-trash"></i>
         </button>
-      </div>
-    </div>
-    <div class="modal fade" *ngFor="let series of userUploads[1]" id="movieModal-{{ series.id }}" tabindex="-1"
-      aria-labelledby="editMovieModal" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h1 class="modal-title fs-3" id="settingsModalLabel">
-              Edit {{ series.title }}
-            </h1>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <form [formGroup]="uploadForm" (ngSubmit)="onSubmit()">
-              <div class="mb-3">
-                <label for="title" class="form-label">Title</label>
-                <input type="text" id="title" formControlName="title" class="form-control" required />
-                <div *ngIf="uploadForm.get('title')?.invalid && uploadForm.get('title')?.touched"
-                  class="upload-error-message">
-                  Title is required
-                </div>
+        <div class="modal fade" id="{{ series.id }}" tabindex="-1" aria-labelledby="editMovieModal" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h1 class="modal-title fs-3" id="settingsModalLabel">
+                  Edit {{ series.title }}
+                </h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
-              <div class="mb-3">
-                <label for="description" class="form-label">Description</label>
-                <textarea id="description" formControlName="description" class="form-control" rows="3"
-                  required></textarea>
-                <div *ngIf="uploadForm.get('description')?.invalid && uploadForm.get('description')?.touched"
-                  class="upload-error-message">
-                  Description is required
-                </div>
-              </div>
-              <div class="mb-3">
-                <label for="type" class="form-label">Type</label>
-                <select id="type" formControlName="type" class="form-select" required>
-                  <option value="">Select Type</option>
-                  <option [selected]="series.type === 'movie'" value="movie">
-                    Movie
-                  </option>
-                  <option [selected]="series.type === 'series'" value="series">
-                    Series
-                  </option>
-                </select>
-                <div *ngIf="
-                      uploadForm.get('type')?.invalid &&
-                      uploadForm.get('type')?.touched
-                    " class="upload-error-message">
-                  Type is required
-                </div>
-                <div class="row" *ngIf="uploadForm.get('type')?.value === 'series'">
-                  <div class="col-md-6 mb-3">
-                    <label for="season" class="form-label">Season</label>
-                    <input type="number" id="season" formControlName="season" class="form-control" min="1">
+              <div class="modal-body">
+                <div class="upload-container">
+                  <div class="upload-form-container">
+                    <div *ngIf="successMessage" class="upload-alert upload-alert-success">
+                      {{ successMessage }}
+                    </div>
+                    <div *ngIf="errorMessage" class="upload-alert upload-alert-danger">
+                      {{ errorMessage }}
+                    </div>
+                    <form [formGroup]="uploadForm" (ngSubmit)="onSubmit()">
+                      <div class="mb-3">
+                        <label for="title" class="form-label">Title</label>
+                        <input [value]="series.title" type="text" id="title" formControlName="title"
+                          class="form-control rounded" [placeholder]="series.title" required />
+                        <div *ngIf="
+                            uploadForm.get('title')?.invalid &&
+                            uploadForm.get('title')?.touched
+                          " class="upload-error-message rounded">
+                          Title is required
+                        </div>
+                      </div>
+                      <div class="mb-3">
+                        <label for="description" class="form-label">Description</label>
+                        <textarea id="description" formControlName="description" class="form-control rounded" rows="3"
+                          [placeholder]="series.description" required></textarea>
+                        <div *ngIf="
+                            uploadForm.get('description')?.invalid &&
+                            uploadForm.get('description')?.touched
+                          " class="upload-error-message rounded">
+                          Description is required
+                        </div>
+                      </div>
+                      <div class="mb-3">
+                        <label for="categorySelect" class="form-label">Categories (max 5)</label>
+                        <div class="d-flex flex-wrap gap-2 mb-2">
+                          <span *ngFor="let category of categories; let i = index" class="badge bg-primary">
+                            {{ category }}
+                            <button type="button" class="btn-close btn-close-white ms-2"
+                              (click)="removeCategory(i)"></button>
+                          </span>
+                        </div>
+                        <select id="categorySelect" class="form-select rounded" [(ngModel)]="selectedCategory"
+                          [ngModelOptions]="{ standalone: true }" (change)="addSelectedCategory()"
+                          [disabled]="categories.length >= 5">
+                          <option value="" disabled selected>
+                            Select a category
+                          </option>
+                          <option *ngFor="let category of availableCategories" [value]="category">
+                            {{ category }}
+                          </option>
+                        </select>
+                        <small *ngIf="categories.length >= 5" class="text-danger">Maximum 5 categories allowed</small>
+                      </div>
+                      <div class="mb-3">
+                        <label for="type" class="form-label">Type</label>
+                        <select id="type" formControlName="type" class="form-select" required>
+                          <option value="">Select Type</option>
+                          <option [selected]="series.type === 'movie'" value="movie">
+                            Movie
+                          </option>
+                          <option [selected]="series.type === 'series'" value="series">
+                            Series
+                          </option>
+                        </select>
+                        <div *ngIf="
+                            uploadForm.get('type')?.invalid &&
+                            uploadForm.get('type')?.touched
+                          " class="upload-error-message">
+                          Type is required
+                        </div>
+                      </div>
+                      <div class="row" *ngIf="uploadForm.get('type')?.value === 'series'">
+                        <div class="col-md-6 mb-3">
+                          <label for="season" class="form-label">Season</label>
+                          <input type="number" id="season" formControlName="season" class="form-control rounded" min="1" />
+                        </div>
+                        <div class="col-md-6 mb-3">
+                          <label for="episode" class="form-label">Episode</label>
+                          <input type="number" id="episode" formControlName="episode" class="form-control rounded" min="1" />
+                        </div>
+                      </div>
+                      <div class="mb-3">
+                        <label for="file" class="form-label">Image</label>
+                        <input type="file" id="file" (change)="onFileChange($event)" class="form-control rounded"
+                          accept="image/jpeg,image/png,image/webp" />
+                        <div *ngIf="fileError" class="upload-error-message rounded">
+                          {{ fileError }}
+                        </div>
+                        <small class="upload-help-text">Supported formats: JPG, JPEG, PNG, WEBP. Max size:
+                          5MB</small>
+                      </div>
+                      <div class="upload-image-preview">
+                        <h3>Current Image</h3>
+                        <img [src]="'https://egyedirobi.moriczcloud.hu/uploads/vizsga/' + series.image_url" class="rounded" alt="">
+                      </div>
+                      <div class="upload-image-preview" *ngIf="imagePreview">
+                        <h3>New Image</h3>
+                        <img [src]="imagePreview" class="rounded" alt="Preview" />
+                      </div>
+                      <button type="submit" [disabled]="
+                          uploadForm.invalid || isSubmitting
+                        " class="upload-button">
+                        <span *ngIf="isSubmitting">Editing...</span>
+                        <span *ngIf="!isSubmitting">Edit</span>
+                      </button>
+                    </form>
                   </div>
-                  <div class="col-md-6 mb-3">
-                    <label for="episode" class="form-label">Episode</label>
-                    <input type="number" id="episode" formControlName="episode" class="form-control" min="1">
-                  </div>
                 </div>
               </div>
-              <div class="mb-3">
-                <p *ngIf="uploadForm.get('category')?.value">
-                  Current Categories:
-                  <span class="badge bg-secondary me-1"
-                    *ngFor="let cat of getCategoryNames(uploadForm.get('category')?.value)">
-                    {{ cat }}
-                  </span>
-                </p>
-                <label for="categorySelect" class="form-label">Categories (max 5)</label>
-                <div class="d-flex flex-wrap gap-2 mb-2">
-                  <span *ngFor="let category of categories; let i = index" class="badge bg-primary">
-                    {{ category.category }}
-                    <button type="button" class="btn-close btn-close-white ms-2" (click)="removeCategory(i)"></button>
-                  </span>
-                </div>
-                <select id="categorySelect" class="form-select" [(ngModel)]="selectedCategory"
-                  [ngModelOptions]="{ standalone: true }" (change)="addSelectedCategory()"
-                  [disabled]="categories.length >= 5">
-                  <option value="" disabled selected>
-                    Select a category
-                  </option>
-                  <option *ngFor="let category of availableCategories" [value]="category.id">
-                    {{ category.category }}
-                  </option>
-                </select>
-                <small *ngIf="categories.length >= 5" class="text-danger">Maximum 5 categories allowed</small>
-              </div>
-              <div class="mb-3">
-                <label for="file" class="form-label">Image</label>
-                <input type="file" id="file" (change)="onFileChange($event)" class="form-control"
-                  accept="image/jpeg,image/png,image/webp" />
-                <div *ngIf="fileError" class="upload-error-message">
-                  {{ fileError }}
-                </div>
-                <small class="upload-help-text">Supported formats: JPG, JPEG, PNG, WEBP. Max size:
-                  5MB</small>
-                <div class="upload-image-preview">
-                  <h3>Current Image</h3>
-                  <img [src]="'https://egyedirobi.moriczcloud.hu/uploads/vizsga/' + series.image_url" alt="">
-                </div>
-                <div class="upload-image-preview" *ngIf="imagePreview">
-                  <h3>New Image</h3>
-                  <img [src]="imagePreview" alt="Preview" />
-                </div>
-              </div>
-              <button type="submit" [disabled]="
-                    uploadForm.invalid || isSubmitting
-                  " class="upload-button">
-                <span *ngIf="isSubmitting">Editing...</span>
-                <span *ngIf="!isSubmitting">Edit</span>
-              </button>
-            </form>
+            </div>
           </div>
         </div>
       </div>

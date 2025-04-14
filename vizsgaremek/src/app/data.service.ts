@@ -28,10 +28,25 @@ export class DataService {
     return false; // Default to not logged in when running server-side
   }
 
-  login() {
+  public checkAuthenticationStatus(): boolean {
     if (isPlatformBrowser(this.platformId)) {
-      localStorage.setItem('logged', "true");
+      const loggedValue = localStorage.getItem('logged');
+      if (loggedValue === 'true') {
+        this.isAuthenticatedSubject.next(true);
+        return true;
+      }
+      else {
+        this.isAuthenticatedSubject.next(false);
+        return false;
+      }
     }
+    return false;
+  }
+
+  login() {
+    // if (isPlatformBrowser(this.platformId)) {
+      localStorage.setItem('logged', "true");
+    // }
     this.isAuthenticatedSubject.next(true);
   }
 
@@ -45,5 +60,18 @@ export class DataService {
 
   move_to(redirect_to: string) {
     this._router.navigateByUrl(redirect_to);
+  }
+
+  // API endpoints
+  private baseApiUrl = 'https://egyedirobi.moriczcloud.hu/vizsga-api';
+
+  // Get average ratings for shows
+  getAverageRatings() {
+    return this.http.get<any[]>(`${this.baseApiUrl}/avg-ratings`);
+  }
+
+  // Get dashboard data including shows
+  getDashboardData() {
+    return this.http.get<any>(`${this.baseApiUrl}/dashboard`);
   }
 }

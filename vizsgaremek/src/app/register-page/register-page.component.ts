@@ -15,7 +15,12 @@ export class RegisterPageComponent {
   name: string = '';
   email: string = '';
   password: string = '';
+  confirmPassword: string = '';
   policyAccepted: boolean = false;
+  
+  // Password visibility control
+  showPassword: boolean = false;
+  showConfirmPassword: boolean = false;
   
   showSuccessAlert: boolean = false;
   showErrorAlert: boolean = false;
@@ -30,8 +35,15 @@ export class RegisterPageComponent {
 
   onSubmit() {
     // Validate form
-    if (!this.name || !this.email || !this.password) {
-      this.errorMessage = 'Minden mező kitöltése kötelező';
+    if (!this.name || !this.email || !this.password || !this.confirmPassword) {
+      this.errorMessage = 'All fields are required';
+      this.showErrorAlert = true;
+      return;
+    }
+
+    // Check if passwords match
+    if (this.password !== this.confirmPassword) {
+      this.errorMessage = 'Passwords do not match';
       this.showErrorAlert = true;
       return;
     }
@@ -49,7 +61,7 @@ export class RegisterPageComponent {
     this.authService.register(this.name, this.email, this.password).subscribe({
       next: (response) => {
         this.isLoading = false;
-        this.successMessage = 'Sikeres regisztráció! Átirányítás a bejelentkezéshez...';
+        this.successMessage = 'Registration successful! Redirecting to login...';
         this.showSuccessAlert = true;
         
         // Navigate to login page after a short delay
@@ -59,7 +71,7 @@ export class RegisterPageComponent {
       },
       error: (error) => {
         this.isLoading = false;
-        this.errorMessage = error.error?.message || 'Sikertelen regisztráció';
+        this.errorMessage = error.error?.message || 'Registration failed';
         this.showErrorAlert = true;
       }
     });

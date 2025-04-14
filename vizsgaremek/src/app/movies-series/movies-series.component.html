@@ -2,17 +2,17 @@
   <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
     <div class="col" *ngFor="let show of shows">
       <div class="card h-100">
-        <img [src]="'https://egyedirobi.moriczcloud.hu/uploads/vizsga/' + show.image_url" class="card-img-top"
-          style="max-height: 600px; z-index: 0 !important;" [alt]="show.title">
+        <img [src]="'https://egyedirobi.moriczcloud.hu/uploads/vizsga/' + show.image_url" class="card-img-top" 
+          style="max-height: 600px;" [alt]="show.title">
         <div class="card-body">
           <h5 class="card-title">{{show.title}}</h5>
-          <p class="card-text">{{show.description}}</p>
+          <p class="card-text">{{ show.description | slice:0:40 }}{{ show.description.length > 40 ? '...' : '' }}</p>
           <div class="d-flex justify-content-between align-items-center">
             <div>
               <span class="badge me-1" *ngFor="let cat of getCategoryArray(show.category)">{{cat}}</span>
             </div>
             <span class="badge bg-secondary">{{show.type}}</span>
-            <button (click)="showDetails(show.id)" type="button" class="btn border">Részletek</button>
+            <button (click)="showDetails(show.id)" type="button" class="btn border">Details</button>
           </div>
         </div>
       </div>

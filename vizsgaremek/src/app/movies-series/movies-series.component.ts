@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { DataService } from '../data.service';
+import { CategoryService } from '../services/category.service';
 
 interface Show {
   id: number;
@@ -32,7 +34,12 @@ export class MoviesSeriesComponent implements OnInit {
   isLoading: boolean = true;
   error: string | null = null;
 
-  constructor(private http: HttpClient, private router: Router) { }
+  constructor(
+    private http: HttpClient,
+    private dataService: DataService,
+    private categoryService: CategoryService,
+    private router: Router
+  ) { }
 
   ngOnInit() {
     this.fetchShows();
@@ -67,40 +74,27 @@ export class MoviesSeriesComponent implements OnInit {
       });
   }
 
-  // Segédfüggvények a kategóriák kezeléséhez
-  isArray(obj: any): boolean {
-    return Array.isArray(obj);
-  }
-
-  getCategoryArray(category: string[] | string): string[] {
-    if (Array.isArray(category)) {
-      return category;
-    } else if (typeof category === 'string') {
-      try {
-        // Próbáljuk meg JSON-ként értelmezni, ha string
-        const parsed = JSON.parse(category);
-        return Array.isArray(parsed) ? parsed : [category];
-      } catch (e) {
-        // Ha nem sikerül JSON-ként értelmezni, akkor egyszerű string
-        return [category];
-      }
-    }
-    return [];
-  }
-
   // Kategóriák feldolgozása minden show-hoz
   processShowCategories() {
     this.shows.forEach(show => {
+      // Convert category IDs to names
       if (typeof show.category === 'string' && show.category) {
-        try {
-          const parsed = JSON.parse(show.category);
-          show.category = Array.isArray(parsed) ? parsed : [show.category];
-        } catch (e) {
-          // Ha nem sikerül JSON-ként értelmezni, hagyjuk stringként
-        }
+        show.category = this.categoryService.parseCategoryString(show.category);
+      } else if (Array.isArray(show.category)) {
+        show.category = show.category.map(cat => this.categoryService.getCategoryNameFromId(cat.toString()));
       } else if (!show.category) {
         show.category = [];
       }
     });
+  }
+
+  // Helper method to convert category string to array and convert IDs to names
+  getCategoryArray(category: string[] | string): string[] {
+    if (Array.isArray(category)) {
+      return category.map(cat => this.categoryService.getCategoryNameFromId(cat));
+    } else if (typeof category === 'string') {
+      return this.categoryService.parseCategoryString(category);
+    }
+    return [];
   }
 }

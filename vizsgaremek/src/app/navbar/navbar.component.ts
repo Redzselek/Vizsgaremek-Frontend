@@ -1,10 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, PLATFORM_ID, Inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { HttpClient } from '@angular/common/http';
-import { Emitters } from '../emitters/emitters';
 import { Router } from '@angular/router';
 import { DataService } from '../data.service';
 import { AuthService } from '../services/auth.service';
@@ -23,21 +22,20 @@ export class NavbarComponent implements OnInit {
     private dataService: DataService, 
     private authService: AuthService,
     private router: Router,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) { }
   
   ngOnInit(): void {
-    // Subscribe to the existing emitter for backward compatibility
-    Emitters.authEmitter.subscribe(
-      (auth: boolean) => {
-        this.authenticated = auth;
-      }
-    );
+    // Check localStorage for authentication status
+    this.authenticated = this.dataService.checkAuthenticationStatus();
     
-    // Also subscribe to the auth service's user observable
-    this.authService.user$.subscribe(user => {
-      this.authenticated = !!user?.isLoggedIn;
+    // Subscribe to the dataService authentication state
+    this.dataService.isAuthenticated$.subscribe(isAuthenticated => {
+      this.authenticated = isAuthenticated;
     });
   }
+
+
 
   logout() {
     this.authService.logout().subscribe({

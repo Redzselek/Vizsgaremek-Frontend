@@ -12,3 +12,7 @@
 .badge{
     background-color: #694c94;
 }
+
+body{
+    overflow-x: hidden;
+}

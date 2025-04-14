@@ -1,67 +1,41 @@
-<div class="container mt-5">
+<div class="container ">
     <div class="row">
-        <div class="col-md-12 text-center">
-            <h1 class="fw-bold">Welcome to MovieTreasure!</h1>
-            <h3 class="mt-5">MovieTreasure is a comprehensive online movie database offering an extensive collection of films, TV series. Users can easily browse through thousands of movies.</h3>
-        </div>
-        <!-- <div class="col-md-6 offset-md-3 mt-5">
-            <div class="card">
-                <div class="card-body">
-                    <div class="alert mb-0" [ngClass]="authenticated ? 'alert-success' : 'alert-warning'">
-                        <h3 *ngIf="authenticated" class="mb-3" style="color: green;">
-                            <i class="bi bi-check-circle-fill me-2"></i>
-                            You're Logged In
-                        </h3>
-                        <h3 *ngIf="!authenticated" class="mb-3" style="color: red;">
-                            <i class="bi bi-exclamation-triangle-fill me-2"></i>
-                            You're Not Logged In!
-                        </h3>
-                        <div *ngIf="authenticated">
-                            <p class="lead mb-4">Welcome {{ userName || 'Felhasználó' }}!</p>
-                            <p>Now you can access all the features:</p>
-                            <ul class="list-group">
-                                <li class="list-group-item">You can browse movies and series</li>
-                                <li class="list-group-item">You can view detailed information</li>
-                                <li class="list-group-item">You can view your user profile</li>
-                            </ul>
-                        </div>
-                        <div *ngIf="!authenticated">
-                            <p class="lead mb-4">Please log in to access all the functions</p>
-                            <p>After logging in, the following functions become available:</p>
-                            <ul class="list-group">
-                                <li class="list-group-item">Browse movies and series</li>
-                                <li class="list-group-item">View detailed information</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div> -->
         <div class="col-md-12 pos mt-5">
-            <div class="row column-gap-2">
-                <h1 class="text-center mb-5">Best Movies</h1>
-                <div class="card" style="width: 18rem;">
-                    <img src="..." class="card-img-top" alt="...">
-                    <div class="card-body">
-                        <h5 class="card-title">Card title</h5>
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                        <a href="#" class="btn btn-primary">Go somewhere</a>
+            <div class="row">
+                <h1 class="text-center mb-5">Top Rated Shows</h1>
+                
+                <!-- Loading spinner -->
+                <div *ngIf="isLoading" class="d-flex justify-content-center">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
                     </div>
                 </div>
-                <div class="card" style="width: 18rem;">
-                    <img src="..." class="card-img-top" alt="...">
-                    <div class="card-body">
-                        <h5 class="card-title">Card title</h5>
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                        <a href="#" class="btn btn-primary">Go somewhere</a>
-                    </div>
+                
+                <!-- No shows found message -->
+                <div *ngIf="!isLoading && topRatedShows.length === 0" class="text-center">
+                    <p>No top rated shows found.</p>
                 </div>
-                <div class="card" style="width: 18rem;">
-                    <img src="..." class="card-img-top" alt="...">
-                    <div class="card-body">
-                        <h5 class="card-title">Card title</h5>
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                
+                <!-- Top rated shows -->
+                <div *ngIf="!isLoading && topRatedShows.length > 0" class="row justify-content-center">
+                    <div *ngFor="let show of topRatedShows" class="card mx-2 mb-4" style="width: 15rem;">
+                        <img 
+                            [src]="'https://egyedirobi.moriczcloud.hu/uploads/vizsga/' + show.image_url" 
+                            class="card-img-top" 
+                            alt="{{ show.title }}"
+                            style="max-height: 300px;">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ show.title }}</h5>
+                            <p class="card-text">{{ show.description | slice:0:30 }}{{ show.description.length > 30 ? '...' : '' }}</p>
+                            <div class="d-block justify-content-between align-items-center mb-3">
+                                <span class="badge bg-secondary me-1">{{ show.type }}</span>
+                                <span class="badge me-1" *ngFor="let cat of getCategoryArray(show.category)">{{cat}}</span>
+                                <span class="badge bg-warning text-dark">★ {{ show.rating | number:'1.1-2' }}</span>
+                            </div>
+                            <div class="d-flex justify-content-center">
+                                <a [routerLink]="['/movies-series-about', show.id]" class="btn btn border">View Details</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

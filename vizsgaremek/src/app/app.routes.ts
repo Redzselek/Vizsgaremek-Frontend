@@ -8,16 +8,17 @@ import { RegisterPageComponent } from './register-page/register-page.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { FooterComponent } from './footer/footer.component';
 import { UploadComponent } from './upload/upload.component';
+import { authGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
     { path: 'main-page', component: MainPageComponent },
     { path: 'movies-series', component: MoviesSeriesComponent },
     { path: 'movies-series-about/:id', component: MoviesSeriesAboutComponent },
-    { path: 'about-profile', component: AboutProfileComponent },
+    { path: 'about-profile', component: AboutProfileComponent, canActivate: [authGuard] },
     { path: 'login', component: LoginPageComponent },
     { path: 'register', component: RegisterPageComponent },
     { path: 'navbar', component: NavbarComponent },
     { path: 'footer', component: FooterComponent },
-    { path: 'upload', component: UploadComponent },
+    { path: 'upload', component: UploadComponent, canActivate: [authGuard] },
     { path: '', pathMatch: 'full', redirectTo: 'main-page' }
 ];
