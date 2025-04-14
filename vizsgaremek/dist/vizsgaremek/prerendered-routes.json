@@ -1,13 +1,13 @@
 {
   "routes": {
-    "/": {},
-    "/about-profile": {},
-    "/footer": {},
-    "/login": {},
-    "/main-page": {},
-    "/movies-series": {},
-    "/navbar": {},
-    "/register": {},
-    "/upload": {}
+    "/.": {},
+    "/./about-profile": {},
+    "/./footer": {},
+    "/./login": {},
+    "/./main-page": {},
+    "/./movies-series": {},
+    "/./navbar": {},
+    "/./register": {},
+    "/./upload": {}
   }
 }
