@@ -30,7 +30,7 @@ export const authInterceptorFn: HttpInterceptorFn = (req, next) => {
       }
     });
   }
-  
+
 
   // Handle the request and catch errors
   return next(req).pipe(
