@@ -4,7 +4,7 @@ export default `<!doctype html>
 <head>
   <meta charset="utf-8">
   <title>Vizsgaremek</title>
-  <base href="/">
+  <base href=".">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <!-- Preload Google Fonts -->
@@ -29,7 +29,6 @@ export default `<!doctype html>
 
 <body ngcm="">
   <app-root></app-root>
-<script src="polyfills-FFHMD2TL.js" type="module"></script><script src="main-ZSP2YB4P.js" type="module"></script></body>
+<script src="polyfills-FFHMD2TL.js" type="module"></script><script src="main-EGDOOKM2.js" type="module"></script></body>
 
-</html>
-`;
+</html>`;

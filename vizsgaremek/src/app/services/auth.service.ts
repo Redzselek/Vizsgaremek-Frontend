@@ -136,7 +136,7 @@ export class AuthService {
   isLoggedIn(): boolean {
     return this.userSubject.value !== null;
   }
-
+  
   /**
    * Get authentication headers with token if available
    */
@@ -240,6 +240,8 @@ export class AuthService {
       })
     );
   }
+
+
   changePassword(currentPassword: string, newPassword: string): Observable<any> {
     return this.http.post(`${this.apiUrl}/vizsga-api/new-password`, {
       oldPassword: currentPassword,

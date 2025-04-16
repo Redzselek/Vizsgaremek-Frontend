@@ -1,11 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { Component, OnInit, AfterViewInit, ElementRef, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
 import { DataService } from '../data.service';
 import { EditUploadComponent } from '../edit-upload/edit-upload.component';
-import { FormsModule } from '@angular/forms';
 
 // Register Swiper custom elements
 declare global {
@@ -17,7 +17,7 @@ declare global {
 @Component({
   selector: 'app-about-profile',
   standalone: true,
-  imports: [CommonModule, HttpClientModule, EditUploadComponent, FormsModule],
+  imports: [CommonModule, HttpClientModule, FormsModule, EditUploadComponent],
   templateUrl: './about-profile.component.html',
   styleUrls: ['./about-profile.component.css'],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
@@ -29,6 +29,7 @@ export class AboutProfileComponent
   userUploads: any = {};
   loading: boolean = true;
   error: string | null = null;
+  
   // Password change properties
   currentPassword: string = '';
   newPassword: string = '';
@@ -49,7 +50,7 @@ export class AboutProfileComponent
 
   ngOnInit() {
     this.fetchUserData();
-
+    
     // Add Swiper script to the document
     const swiperScript = document.createElement('script');
     swiperScript.src = 'https://cdn.jsdelivr.net/npm/swiper@11/swiper-element-bundle.min.js';
@@ -68,8 +69,6 @@ export class AboutProfileComponent
     this.authService.getUserInfo().subscribe({
       next: (userData) => {
         this.user = userData;
-        console.log(this.user);
-
         this.loading = false;
       },
       error: (err) => {
@@ -142,10 +141,10 @@ export class AboutProfileComponent
         swiperEl.slidesPerView = 3;
         swiperEl.spaceBetween = 10;
         swiperEl.navigation = true;
-
+        
         // Set breakpoints properly
         swiperEl.breakpoints = {
-
+          
           '140': {
             slidesPerView: 1,
             spaceBetween: 0,
@@ -162,7 +161,7 @@ export class AboutProfileComponent
             slidesPerView: 2,
             spaceBetween: 50,
           },
-          '990': {
+          '990':{
             slidesPerView: 2,
             spaceBetween: 20,
           },
@@ -175,7 +174,7 @@ export class AboutProfileComponent
             spaceBetween: 20,
           },
         };
-
+        
         // Initialize the swiper
         swiperEl.initialize();
       }
@@ -191,6 +190,38 @@ export class AboutProfileComponent
       collapseUsername.classList.add('show');
     }
   }
+
+  // checkExpand(event: Event) {
+  //   const usernameBtn = this.elementRef.nativeElement.querySelector('#usernameBtn');
+  //   const passwordBtn = this.elementRef.nativeElement.querySelector('#passwordBtn');
+  //   const collapseUsername = this.elementRef.nativeElement.querySelector('#collapseUsername');
+  //   const collapsePassword = this.elementRef.nativeElement.querySelector('#collapsePassword');
+
+  //   if (!usernameBtn || !passwordBtn || !collapseUsername || !collapsePassword) {
+  //     return;
+  //   }
+
+  //   if (usernameBtn === event.target) {
+  //     if (collapseUsername.classList.contains('show')) {
+  //       // nem csinál semmit, ha ugyanarra kattintunk
+  //     } else {
+  //       usernameBtn.setAttribute('aria-expanded', 'true');
+  //       collapseUsername.classList.add('show');
+  //       collapsePassword.classList.remove('show');
+  //       passwordBtn.setAttribute('aria-expanded', 'false');
+  //     }
+  //   } else if (passwordBtn === event.target) {
+  //     if (collapsePassword.classList.contains('show')) {
+  //       // nem csinál semmit, ha ugyanarra kattintunk
+  //     } else {
+  //       passwordBtn.setAttribute('aria-expanded', 'true');
+  //       collapsePassword.classList.add('show');
+  //       collapseUsername.classList.remove('show');
+  //       usernameBtn.setAttribute('aria-expanded', 'false');
+  //     }
+  //   }
+  // }
+
   changePassword() {
     this.isChangingPassword = true;
     this.passwordError = null;
@@ -203,24 +234,25 @@ export class AboutProfileComponent
       return;
     }
 
+    // Call API to change password
     this.authService.changePassword(this.currentPassword, this.newPassword).subscribe({
-      next: () => {
+      next: (response: any) => {
         this.passwordSuccess = 'Password changed successfully! You will be logged out.';
         this.isChangingPassword = false;
-
+        
         // Clear form
         this.currentPassword = '';
         this.newPassword = '';
         this.confirmPassword = '';
         setTimeout(() => {
-          // Close the modal almost instantly using DOM API
-          const closeButton = document.querySelector('#settingsModal .btn-close') as HTMLElement;
-          if (closeButton) {
-            closeButton.click();
-          }
-
-          // Logout after a very short delay
-
+        // Close the modal almost instantly using DOM API
+        const closeButton = document.querySelector('#settingsModal .btn-close') as HTMLElement;
+        if (closeButton) {
+          closeButton.click();
+        }
+        
+        // Logout after a very short delay
+        
           this.logout();
         }, 2000);
       },

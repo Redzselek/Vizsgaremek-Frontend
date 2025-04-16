@@ -17,11 +17,11 @@ export class RegisterPageComponent {
   password: string = '';
   confirmPassword: string = '';
   policyAccepted: boolean = false;
-
+  
   // Password visibility control
   showPassword: boolean = false;
   showConfirmPassword: boolean = false;
-
+  
   showSuccessAlert: boolean = false;
   showErrorAlert: boolean = false;
   successMessage: string = '';
@@ -63,7 +63,7 @@ export class RegisterPageComponent {
         this.isLoading = false;
         this.successMessage = 'Registration successful! Redirecting to login...';
         this.showSuccessAlert = true;
-
+        
         // Navigate to login page after a short delay
         setTimeout(() => {
           this.router.navigate(['/login']);

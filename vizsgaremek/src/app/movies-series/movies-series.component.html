@@ -1,22 +1,19 @@
 <div class="container mt-4">
-  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-2">
+  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
     <div class="col" *ngFor="let show of shows">
       <div class="card h-100">
-        <div class="row">
-          <div class="col-md-12">
-            <img [src]="'https://egyedirobi.moriczcloud.hu/uploads/vizsga/' + show.image_url"
-              class="img-fluid mx-auto d-block" style="max-height: 800px;" [alt]="show.title">
-            <span class="badge bg-primary rounded position-absolute fs-6 top-0 end-0 mt-3 me-3">{{show.type}}</span>
-          </div>
-        </div>
-        <div class="card-body text-center">
+        <img [src]="'https://egyedirobi.moriczcloud.hu/uploads/vizsga/' + show.image_url" class="card-img-top" 
+          style="max-height: 600px;" [alt]="show.title">
+        <div class="card-body">
           <h5 class="card-title">{{show.title}}</h5>
-          <p class="card-text">{{ show.description | slice:0:60 }}{{ show.description.length > 60 ? '...' : '' }}</p>
-          <div class="d-flex flex-wrap justify-content-center">
-            <span class="badge me-1" *ngFor="let cat of getCategoryArray(show.category)">{{cat}}</span>
+          <p class="card-text">{{ show.description | slice:0:40 }}{{ show.description.length > 40 ? '...' : '' }}</p>
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <span class="badge me-1" *ngFor="let cat of getCategoryArray(show.category)">{{cat}}</span>
+            </div>
+            <span class="badge bg-secondary">{{show.type}}</span>
+            <button (click)="showDetails(show.id)" type="button" class="btn border">Details</button>
           </div>
-          <button (click)="showDetails(show.id ?? 0)" type="button"
-            class="btn border mx-auto mt-3 d-block">Details</button>
         </div>
       </div>
     </div>

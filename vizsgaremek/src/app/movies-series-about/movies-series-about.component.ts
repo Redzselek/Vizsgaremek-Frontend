@@ -1,15 +1,15 @@
 // movies-series-about.component.ts
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { ActivatedRoute } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
+import { ActivatedRoute } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
+import { CategoryService } from '../services/category.service';
 
 interface Show {
   id: number;
   title: string;
   description: string;
-  category: number[];
+  category: string[];
   type: string;
   image_url: string;
   rating?: number;
@@ -17,14 +17,12 @@ interface Show {
   comments: any[];
   date: string;
   user_id: number;
-  season: number;
-  episode: number;
 }
 
 @Component({
   selector: 'app-movies-series-about',
   standalone: true,
-  imports: [CommonModule, HttpClientModule],
+  imports: [CommonModule],
   templateUrl: './movies-series-about.component.html',
   styleUrls: ['./movies-series-about.component.css']
 })
@@ -40,9 +38,7 @@ export class MoviesSeriesAboutComponent implements OnInit {
     user_rating: 0,
     comments: [],
     date: '',
-    user_id: 0,
-    season: 0,
-    episode: 0
+    user_id: 0
   };
   isLoading: boolean = true;
   error: string | null = null;
@@ -50,7 +46,11 @@ export class MoviesSeriesAboutComponent implements OnInit {
   editing: boolean = false;
   editing_id: number = 0;
 
-  constructor(private http: HttpClient, private route: ActivatedRoute) { }
+  constructor(
+    private route: ActivatedRoute,
+    private http: HttpClient,
+    private categoryService: CategoryService
+  ) { }
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
@@ -61,7 +61,6 @@ export class MoviesSeriesAboutComponent implements OnInit {
 
 
   loadShowDetails(id: number): void {
-    this.getCategories();
     this.isLoading = true;
     this.error = null;
 
@@ -70,12 +69,16 @@ export class MoviesSeriesAboutComponent implements OnInit {
         next: (response) => {
           if (response) {
             const showData = { ...response };
+
+            // Parse the category JSON string to an array and convert IDs to names
             if (typeof showData.category === 'string') {
-              showData.category = JSON.parse(showData.category);
+              showData.category = this.categoryService.parseCategoryString(showData.category);
+            } else if (Array.isArray(showData.category)) {
+              showData.category = showData.category.map((cat: any) => 
+                this.categoryService.getCategoryNameFromId(cat.toString())
+              );
             }
             this.selectedShow = showData;
-            console.log(this.selectedShow.episode);
-
             this.avgRating(id);
             this.isWatchlisted(id);
             this.getComments(id);
@@ -234,24 +237,5 @@ export class MoviesSeriesAboutComponent implements OnInit {
   editComment(id: number): void {
     this.editing = true;
     this.editing_id = id;
-  }
-
-  predefinedCategories: any[] = [];
-  getCategories() {
-    this.http.get('https://egyedirobi.moriczcloud.hu/vizsga-api/get-categories').subscribe({
-      next: (response: any) => {
-        this.predefinedCategories = response;
-      },
-      error: (error) => {
-        console.error('Error fetching categories:', error);
-      }
-    });
-  }
-
-  getCategoryArray(categoryIds: number[]): string[] {
-    if (!categoryIds) {
-      return [];
-    }
-    return categoryIds.map(id => this.predefinedCategories.find(cat => cat.id === id)?.category);
   }
 }

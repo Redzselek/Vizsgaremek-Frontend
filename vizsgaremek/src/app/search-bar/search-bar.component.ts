@@ -23,9 +23,9 @@ export interface SearchApiResponse {
 
 export class SearchBarComponent {
   @ViewChild('searchContainer') searchContainer!: ElementRef;
-
+  
   constructor(private http: HttpClient) { }
-
+  
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent) {
     // Check if click was outside the search container
@@ -54,7 +54,7 @@ export class SearchBarComponent {
       next: (response) => {
         this.searchResults = response;
         console.log('Search results:', this.searchResults);
-
+        
         this.searchResults.forEach(result => {
           this.fetchRating(result.id);
         });
@@ -64,7 +64,7 @@ export class SearchBarComponent {
       }
     });
   }
-
+  
   fetchRating(showId: number) {
     this.http.get<any>('https://egyedirobi.moriczcloud.hu/vizsga-api/avg-rating/' + showId)
       .subscribe({

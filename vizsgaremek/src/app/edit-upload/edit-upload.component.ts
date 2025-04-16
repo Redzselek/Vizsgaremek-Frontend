@@ -1,20 +1,11 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, FormsModule } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
-import { AboutProfileComponent } from '../about-profile/about-profile.component';
+import { CategoryService } from '../services/category.service';
 
-interface UploadForm {
-  id: number | null;
-  title: string;
-  description: string;
-  category: any;
-  type: string;
-  season: number | null;
-  episode: number | null;
-}
 
 @Component({
   selector: 'app-edit-upload',
@@ -37,30 +28,29 @@ export class EditUploadComponent implements OnInit {
     private formBuilder: FormBuilder,
     private http: HttpClient,
     private router: Router,
-    private aboutProfileComponent: AboutProfileComponent
+    private categoryService: CategoryService
   ) { }
 
   ngOnInit() {
     this.initForm();
-    this.getCategories();
+    this.updateAvailableCategories();
   }
 
   initForm(): void {
-    this.uploadForm = this.formBuilder.group<UploadForm>({
-      id: null,
-      title: '',
-      description: '',
-      category: [],
-      type: '',
-      season: null,
-      episode: null
+    this.uploadForm = this.formBuilder.group({
+      title: ['', [Validators.required]],
+      description: ['', [Validators.required]],
+      category: [''],
+      type: ['', [Validators.required]],
+      season: [null],
+      episode: [null]
     });
     this.authService.getUserUploads().subscribe({
-      next: (response) => {
-        if (response) {
-          const listShows = { ...response };
-          this.userUploads = listShows;
-        }
+      next: (userUploads) => {
+        this.userUploads = userUploads;
+        // Clear categories when reloading uploads
+        this.categories = [];
+        this.updateAvailableCategories();
       },
       error: (err) => {
         console.error('Error fetching user data:', err);
@@ -80,36 +70,30 @@ export class EditUploadComponent implements OnInit {
     });
   }
 
-  openModal(showid: number) {
-    this.authService.getSelectedShow(showid).subscribe({
-      next: (response) => {
-        if (response) {
-          const showData = { ...response };
-          this.uploadForm.patchValue({
-            id: showData.id,
-            title: showData.title,
-            description: showData.description,
-            category: JSON.parse(showData.category),
-            type: showData.type,
-            season: showData.season,
-            episode: showData.episode
-          });
+  removeFromUploads(showid: number) {
+    // Show confirmation dialog before deleting
+    if (confirm('Are you sure you want to delete this item? This action cannot be undone.')) {
+      this.authService.removeFromUploads(showid).subscribe({
+        next: () => {
+          this.initForm();
+        },
+        error: (err) => {
+          console.error('Error removing show from uploads:', err);
         }
-      },
-    })
+      });
+    }
+  }
+  loadCategoriesForEdit(categoriesString: string): void {
+    // Clear existing categories
+    this.categories = [];
+    
+    // Use the category service to parse the category string
+    this.categories = this.categoryService.parseCategoryString(categoriesString);
+    
+    // Update available categories to exclude already selected ones
+    this.updateAvailableCategories();
   }
 
-  removeFromUploads(showid: number) {
-    this.authService.removeFromUploads(showid).subscribe({
-      next: () => {
-        this.initForm();
-        this.aboutProfileComponent.fetchUserData();
-      },
-      error: (err) => {
-        console.error('Error removing show from uploads:', err);
-      }
-    });
-  }
   onSubmit(): void {
     if (this.uploadForm.invalid) {
       // Mark all fields as touched to trigger validation messages
@@ -129,29 +113,27 @@ export class EditUploadComponent implements OnInit {
     this.errorMessage = '';
 
     const formData = new FormData();
-    formData.append('id', this.uploadForm.get('id')?.value);
     formData.append('title', this.uploadForm.get('title')?.value);
     formData.append('description', this.uploadForm.get('description')?.value);
 
     // Használjuk a kategóriák tömböt JSON formátumban
     if (this.categories.length > 0) {
       formData.append('category', this.getCategoriesJson());
-    } else formData.append('category', this.getFormCategories());
+    } else {
+      formData.append('category', this.uploadForm.get('category')?.value || '');
+    }
+
     formData.append('type', this.uploadForm.get('type')?.value);
 
-    if (this.uploadForm.get('type')?.value === 'series') {
+    if (this.uploadForm.get('type')?.value === 'sorozat') {
       formData.append('season', this.uploadForm.get('season')?.value);
       formData.append('episode', this.uploadForm.get('episode')?.value);
     } else {
-      formData.append('season', "1");
-      formData.append('episode', "0");
+      formData.append('season', '');
+      formData.append('episode', '');
     }
 
-    if (!this.selectedFile === null) {
-      formData.append('file', this.selectedFile!);
-    }
-
-
+    formData.append('file', this.selectedFile!);
 
     // Get auth token from localStorage
     const token = localStorage.getItem('auth_token');
@@ -179,10 +161,6 @@ export class EditUploadComponent implements OnInit {
         error: (error) => {
           this.isSubmitting = false;
 
-          console.error(error);
-
-
-
           if (error.status === 422) {
             // Validation errors
             if (error.error && error.error.errors) {
@@ -205,76 +183,13 @@ export class EditUploadComponent implements OnInit {
       });
   }
 
-  predefinedCategories: any[] = [];
-  categories: any[] = [];
+  // Get predefined categories from the category service
+  get predefinedCategories(): string[] {
+    return this.categoryService.getAllCategories();
+  }
+  categories: string[] = [];
   selectedCategory = '';
-  availableCategories: any[] = [];
-  categoriesJson: string = '';
-  categoriesForm: string = '';
-
-  getCategories() {
-    this.http.get('https://egyedirobi.moriczcloud.hu/vizsga-api/get-categories').subscribe({
-      next: (response: any) => {
-        this.predefinedCategories = response;
-        this.updateAvailableCategories();
-      },
-      error: (error) => {
-        console.error('Error fetching categories:', error);
-      }
-    });
-  }
-
-  getCategoryNames(categoryIds: number[]): string[] {
-    if (!categoryIds) {
-      return [];
-    }
-    return categoryIds.map(id => this.predefinedCategories.find(cat => cat.id === id)?.category);
-  }
-
-  updateAvailableCategories(): void {
-    this.availableCategories = this.predefinedCategories.filter(
-      category => !this.categories.includes(category)
-    );
-  }
-
-  addSelectedCategory(): void {
-    if (this.selectedCategory && !this.categories.find(category => category.id === this.selectedCategory) && this.categories.length < 5) {
-      const categoryName = this.getCategoryNames([parseInt(this.selectedCategory)])[0];
-      this.categories.push({ id: this.selectedCategory, category: categoryName });
-      this.selectedCategory = '';
-      this.updateAvailableCategories();
-    }
-  }
-
-  removeCategory(index: number): void {
-    this.categories.splice(index, 1);
-    this.updateAvailableCategories();
-  }
-
-  getCategoriesJson(): string {
-    this.categoriesJson = '[';
-    for (let i = 0; i < this.categories.length; i++) {
-      if (i > 0) {
-        this.categoriesJson += ',';
-      }
-      this.categoriesJson += this.categories[i].id;
-    }
-    this.categoriesJson += ']';
-    return this.categoriesJson;
-  }
-
-  getFormCategories() {
-    this.categoriesForm = '[';
-    for (let i = 0; i < this.uploadForm.value.category.length; i++) {
-      if (i > 0) {
-        this.categoriesForm += ',';
-      }
-      this.categoriesForm += this.uploadForm.get('category')?.value[i];
-    }
-    this.categoriesForm += ']';
-    console.log(this.categoriesForm);
-    return this.categoriesForm;
-  }
+  availableCategories: string[] = [];
 
   onFileChange(event: Event): void {
     const input = event.target as HTMLInputElement;
@@ -309,5 +224,29 @@ export class EditUploadComponent implements OnInit {
       };
       reader.readAsDataURL(file);
     }
+  }
+
+  updateAvailableCategories(): void {
+    // Csak azokat a kategóriákat jelenítjük meg, amelyek még nincsenek kiválasztva
+    this.availableCategories = this.predefinedCategories.filter(
+      category => !this.categories.includes(category)
+    );
+  }
+
+  addSelectedCategory(): void {
+    if (this.selectedCategory && !this.categories.includes(this.selectedCategory) && this.categories.length < 5) {
+      this.categories.push(this.selectedCategory);
+      this.selectedCategory = '';
+      this.updateAvailableCategories();
+    }
+  }
+
+  removeCategory(index: number): void {
+    this.categories.splice(index, 1);
+    this.updateAvailableCategories();
+  }
+
+  getCategoriesJson(): string {
+    return JSON.stringify(this.categories);
   }
 }

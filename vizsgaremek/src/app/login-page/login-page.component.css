@@ -1,14 +1,16 @@
 .container{
-  width: 30vw;
+    width: 30vw;
 }
 
 .alert{
-  position: relative;
-  z-index: 100;
+    position: relative;
+    z-index: 100;
 }
 
+
+
 @media only screen and (max-width: 768px) {
-  .container{
-      width: 100%;
-  }
+    .container{
+        width: 100%;
+    }
 }
