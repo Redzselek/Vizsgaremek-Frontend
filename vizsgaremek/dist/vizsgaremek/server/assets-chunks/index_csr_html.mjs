@@ -29,7 +29,7 @@ export default `<!doctype html>
 
 <body ngcm="">
   <app-root></app-root>
-<script src="polyfills-FFHMD2TL.js" type="module"></script><script src="main-BPFDZCEY.js" type="module"></script></body>
+<script src="polyfills-FFHMD2TL.js" type="module"></script><script src="main-HM4IWUNL.js" type="module"></script></body>
 
 </html>
 `;

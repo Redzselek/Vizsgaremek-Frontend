@@ -48,12 +48,6 @@ export class RegisterPageComponent {
       return;
     }
 
-    if (!this.policyAccepted) {
-      this.errorMessage = 'El kell fogadnia az adatvédelmi szabályzatot';
-      this.showErrorAlert = true;
-      return;
-    }
-
     this.isLoading = true;
     this.showErrorAlert = false;
     this.showSuccessAlert = false;
