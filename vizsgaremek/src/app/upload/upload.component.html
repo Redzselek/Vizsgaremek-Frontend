@@ -10,80 +10,78 @@
       {{ errorMessage }}
     </div>
 
-        <form [formGroup]="uploadForm" (ngSubmit)="onSubmit()">
-            <div class="mb-3">
-                <label for="title" class="form-label">Title</label>
-                <input type="text" id="title" formControlName="title" class="form-control rounded" required>
-                <div *ngIf="uploadForm.get('title')?.invalid && uploadForm.get('title')?.touched"
-                    class="upload-error-message">
-                    Title is required
-                </div>
-            </div>
+    <form [formGroup]="uploadForm" (ngSubmit)="onSubmit()">
+      <div class="mb-3">
+        <label for="title" class="form-label">Title</label>
+        <input type="text" id="title" formControlName="title" class="form-control" required>
+        <div *ngIf="uploadForm.get('title')?.invalid && uploadForm.get('title')?.touched" class="upload-error-message">
+          Title is required
+        </div>
+      </div>
 
-            <div class="mb-3">
-                <label for="description" class="form-label">Description</label>
-                <textarea id="description" formControlName="description" class="form-control rounded" rows="3"
-                    required></textarea>
-                <div *ngIf="uploadForm.get('description')?.invalid && uploadForm.get('description')?.touched"
-                    class="upload-error-message">
-                    Description is required
-                </div>
-            </div>
+      <div class="mb-3">
+        <label for="description" class="form-label">Description</label>
+        <textarea id="description" formControlName="description" class="form-control" rows="3" required></textarea>
+        <div *ngIf="uploadForm.get('description')?.invalid && uploadForm.get('description')?.touched"
+          class="upload-error-message">
+          Description is required
+        </div>
+      </div>
 
-            <div class="mb-3">
-                <label for="categorySelect" class="form-label">Categories (max 5)</label>
-                <div class="d-flex flex-wrap gap-2 mb-2">
-                    <span *ngFor="let category of categories; let i = index" class="badge bg-primary">
-                        {{ category }} 
-                        <button type="button" class="btn-close btn-close-white ms-2" (click)="removeCategory(i)"></button>
-                    </span>
-                </div>
-                <select id="categorySelect" class="form-select rounded" [(ngModel)]="selectedCategory" [ngModelOptions]="{standalone: true}" (change)="addSelectedCategory()" [disabled]="categories.length >= 5">
-                <option value="" disabled selected>Select a category</option>
-                <option *ngFor="let category of availableCategories" [value]="category">
-                    {{ category }}
-                </option>
-                </select>
-                <small *ngIf="categories.length >= 5" class="text-danger">Maximum 5 categories allowed</small>
-            </div>
+      <div class="mb-3">
+        <label for="categorySelect" class="form-label">Categories (max 5)</label>
+        <div class="d-flex flex-wrap gap-2 mb-2">
+          <span *ngFor="let category of categories; let i = index" class="badge bg-primary">
+            {{ category.category }}
+            <button type="button" class="btn-close btn-close-white ms-2" (click)="removeCategory(i)"></button>
+          </span>
+        </div>
+        <select id="categorySelect" class="form-select" [(ngModel)]="selectedCategory"
+          [ngModelOptions]="{standalone: true}" (change)="addSelectedCategory()" [disabled]="categories.length >= 5">
+          <option value="" disabled selected>Select a category</option>
+          <option *ngFor="let category of availableCategories" [value]="category.id">
+            {{ category.category }}
+          </option>
+        </select>
+        <small *ngIf="categories.length >= 5" class="text-danger">Maximum 5 categories allowed</small>
+      </div>
 
-            <div class="mb-3">
-                <label for="type" class="form-label rounded">Type</label>
-                <select id="type" formControlName="type" class="form-select rounded" required>
-                    <option value="">Select Type</option>
-                    <option value="movie">Movie</option>
-                    <option value="series">Series</option>
-                </select>
-                <div *ngIf="uploadForm.get('type')?.invalid && uploadForm.get('type')?.touched"
-                    class="upload-error-message">
-                    Type is required
-                </div>
-            </div>
+      <div class="mb-3">
+        <label for="type" class="form-label">Type</label>
+        <select id="type" formControlName="type" class="form-select" required>
+          <option value="">Select Type</option>
+          <option value="movie">Movie</option>
+          <option value="series">Series</option>
+        </select>
+        <div *ngIf="uploadForm.get('type')?.invalid && uploadForm.get('type')?.touched" class="upload-error-message">
+          Type is required
+        </div>
+      </div>
 
-            <div class="row" *ngIf="uploadForm.get('type')?.value === 'series'">
-                <div class="col-md-6 mb-3">
-                    <label for="season" class="form-label rounded">Season</label>
-                    <input type="number" id="season" formControlName="season" class="form-control rounded" min="1">
-                </div>
-                <div class="col-md-6 mb-3">
-                    <label for="episode" class="form-label rounded">Episode</label>
-                    <input type="number" id="episode" formControlName="episode" class="form-control rounded" min="1">
-                </div>
-            </div>
+      <div class="row" *ngIf="uploadForm.get('type')?.value === 'series'">
+        <div class="col-md-6 mb-3">
+          <label for="season" class="form-label">Season</label>
+          <input type="number" id="season" formControlName="season" class="form-control" min="1">
+        </div>
+        <div class="col-md-6 mb-3">
+          <label for="episode" class="form-label">Episode</label>
+          <input type="number" id="episode" formControlName="episode" class="form-control" min="1">
+        </div>
+      </div>
 
-            <div class="mb-3">
-                <label for="file" class="form-label rounded">Image</label>
-                <input type="file" id="file" (change)="onFileChange($event)" class="form-control rounded"
-                    accept="image/jpeg,image/png,image/webp">
-                <div *ngIf="fileError" class="upload-error-message">
-                    {{ fileError }}
-                </div>
-                <small class="upload-help-text ">Supported formats: JPG, JPEG, PNG, WEBP. Max size: 5MB</small>
-            </div>
+      <div class="mb-3">
+        <label for="file" class="form-label">Image</label>
+        <input type="file" id="file" (change)="onFileChange($event)" class="form-control"
+          accept="image/jpeg,image/png,image/webp">
+        <div *ngIf="fileError" class="upload-error-message">
+          {{ fileError }}
+        </div>
+        <small class="upload-help-text">Supported formats: JPG, JPEG, PNG, WEBP. Max size: 5MB</small>
+      </div>
 
-            <div class="upload-image-preview rounded" *ngIf="imagePreview">
-                <img [src]="imagePreview" alt="Preview">
-            </div>
+      <div class="upload-image-preview" *ngIf="imagePreview">
+        <img [src]="imagePreview" alt="Preview">
+      </div>
 
       <button type="submit" [disabled]="uploadForm.invalid || !selectedFile || isSubmitting" class="upload-button">
         <span *ngIf="isSubmitting">Uploading...</span>

@@ -1,44 +1,72 @@
 <div class="container ">
-    <div class="row">
-        <div class="col-md-12 pos mt-5">
-            <div class="row">
-                <h1 class="text-center mb-5">Top Rated Shows</h1>
-                
-                <!-- Loading spinner -->
-                <div *ngIf="isLoading" class="d-flex justify-content-center">
-                    <div class="spinner-border text-primary" role="status">
-                        <span class="visually-hidden">Loading...</span>
-                    </div>
-                </div>
-                
-                <!-- No shows found message -->
-                <div *ngIf="!isLoading && topRatedShows.length === 0" class="text-center">
-                    <p>No top rated shows found.</p>
-                </div>
-                
-                <!-- Top rated shows -->
-                <div *ngIf="!isLoading && topRatedShows.length > 0" class="row justify-content-center">
-                    <div *ngFor="let show of topRatedShows" class="card mx-2 mb-4" style="width: 15rem;">
-                        <img 
-                            [src]="'https://egyedirobi.moriczcloud.hu/uploads/vizsga/' + show.image_url" 
-                            class="card-img-top" 
-                            alt="{{ show.title }}"
-                            style="max-height: 300px;">
-                        <div class="card-body">
-                            <h5 class="card-title">{{ show.title }}</h5>
-                            <p class="card-text">{{ show.description | slice:0:30 }}{{ show.description.length > 30 ? '...' : '' }}</p>
-                            <div class="d-block justify-content-between align-items-center mb-3">
-                                <span class="badge bg-secondary me-1">{{ show.type }}</span>
-                                <span class="badge me-1" *ngFor="let cat of getCategoryArray(show.category)">{{cat}}</span>
-                                <span class="badge bg-warning text-dark">★ {{ show.rating | number:'1.1-2' }}</span>
-                            </div>
-                            <div class="d-flex justify-content-center">
-                                <a [routerLink]="['/movies-series-about', show.id]" class="btn btn border">View Details</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+  <div class="row">
+    <div class="col-md-12 pos mt-5">
+      <div class="row text-center mb-5">
+        <h1 class="text-center">Welcome to MovieTreasure!</h1>
+        <h3>Where film enthusiasts discover true cinematic gems! Our platform isn't just a
+          database – it's a treasure trove created by movie lovers, for movie lovers.</h3>
+      </div>
+      <div class="row">
+        <h1 class="text-center mb-5">Top Rated Shows</h1>
+
+        <!-- Loading spinner -->
+        <div *ngIf="isLoading" class="d-flex justify-content-center">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
         </div>
+
+        <!-- No shows found message -->
+        <div *ngIf="!isLoading && topRatedShows.length === 0" class="text-center">
+          <p>No top rated shows found.</p>
+        </div>
+
+        <!-- Top rated shows -->
+        <div *ngIf="!isLoading && topRatedShows.length > 0" class="row justify-content-center">
+          <div *ngFor="let show of topRatedShows" class="card border-dark mx-2 mb-4"
+            [routerLink]="['/movies-series-about', show.id]" style="cursor: pointer; user-select: none;">
+            <img [src]="'https://egyedirobi.moriczcloud.hu/uploads/vizsga/' + show.image_url" class="card-img-top"
+              alt="{{ show.title }}">
+            <div
+              class="card-body position-absolute top-0 start-0 w-100 h-100 d-flex flex-column justify-content-center align-items-center">
+              <div class="position-absolute top-0 start-0 mt-2 ms-0">
+                <span class="badge bg-secondary type">{{ show.type }}</span>
+              </div>
+              <div class="position-absolute top-0 end-0 mt-3 me-0">
+                <span class="badge bg-warning text-dark rating">★ {{ show.rating | number:'1.1-2'
+                  }}</span>
+              </div>
+              <a [routerLink]="['/movies-series-about', show.id]"
+                class="link-underline-opacity-0 link-underline-opacity-75-hover">
+                <h5 class="card-title text-white text-bg-dark p-2">{{ show.title }}</h5>
+              </a>
+              <!-- <div class="position-absolute bottom-0 start-50 translate-middle-x mb-1">
+                <a [routerLink]="['/movies-series-about', show.id]" class="btn btn-primary">View Details</a>
+              </div> -->
+            </div>
+          </div>
+        </div>
+      </div>
+      <hr>
+      <div class="row justify-content-center mb-5 mt-5">
+        <div class="col-md-6 col-lg-4 col-xl-3 text-center">
+          <h3 class="display-5 fw-bold mb-3">{{ movieCount }}</h3>
+          <p class="lead">Movies</p>
+        </div>
+        <div class="col-md-6 col-lg-4 col-xl-3 text-center">
+          <h3 class="display-5 fw-bold mb-3">{{ seriesCount }}</h3>
+          <p class="lead">Series</p>
+        </div>
+      </div>
     </div>
+    <hr>
+    <div class="row text-center mb-5 mt-5 bg-primary rounded p-3">
+      <div class="col-sm-10 offset-sm-1 col-md-8 offset-md-2 col-lg-6 offset-lg-3">
+        <h1 class="display-4 fw-bold mb-3">About the Platform</h1>
+        <p class="lead">MovieTreasure is a community-driven platform where users upload, rate, and discuss their
+          favorite films and TV series. Here you'll find user-contributed content including detailed reviews,
+          comprehensive information about movies and shows.</p>
+      </div>
+    </div>
+  </div>
 </div>

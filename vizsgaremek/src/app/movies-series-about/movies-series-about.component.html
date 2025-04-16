@@ -24,31 +24,35 @@
       <div class="col-md-4">
         <div class="movie-poster mb-3">
           <img [src]="'https://egyedirobi.moriczcloud.hu/uploads/vizsga/' + selectedShow.image_url"
-            style="max-height: 500px;" [alt]="selectedShow.title" class="img-fluid rounded">
+            style="max-height: 650px;" [alt]="selectedShow.title" class="img-fluid rounded">
         </div>
 
         <!-- Műfajok -->
-        <div class="mb-3">
-          <span class="badge rounded bg-primary me-1" *ngFor="let cat of selectedShow.category">{{cat}}</span>
-          <span class="badge rounded bg-secondary ms-2">{{selectedShow.type}}</span>
+        <div class="d-flex mb-3">
+          <span class="badge bg-primary me-1 fs-6"
+            *ngFor="let cat of getCategoryArray(selectedShow.category)">{{cat}}</span>
+          <span class="badge bg-secondary ms-auto fs-6">{{selectedShow.type}}</span>
         </div>
 
         <!-- Leírás -->
         <div class="mb-4">
-          <p class="description">{{ selectedShow.description }}</p>
+          <p class="description fs-5">{{ selectedShow.description }}</p>
         </div>
 
       </div>
-      <div class="col-md-4 border rounded p-3">
+      <div class="col-md-4 border rounded p-3 order-md-1 order-2 mt-3 mt-md-0">
         <h5>Comments: </h5>
         <div class="comments-input mt-auto w-100 d-flex">
           <input type="text" id="comment-input" class="w-100 p-2 border border-none" placeholder="Comment...">
           <button (click)="createComment()" id="comment_btn" class="btn btn-primary">Send</button>
         </div>
         <div class="comments border-bottom mt-2" *ngFor="let comment of selectedShow.comments">
-          <h6 class="fw-bold">{{ comment.user_name }}</h6>
+          <div class="d-flex">
+            <h6 class="fw-bold me-2">{{ comment.user_name }}</h6>
+            <small class="text-secondary" *ngIf="comment.edited == true">(edited)</small>
+          </div>
           <div>
-            <p *ngIf="editing == false">{{ comment.comment }}</p>
+            <p *ngIf="editing == false || comment.id != editing_id">{{ comment.comment }}</p>
             <div *ngIf="comment.user_id == selectedShow.user_id" class="d-flex ">
               <input *ngIf="editing == true && comment.id == editing_id" id="edit-comment" type="text"
                 [value]="comment.comment" class="w-100 p-2 border border-none">
@@ -67,7 +71,7 @@
         </div>
       </div>
       <!-- Jobb oldali oszlop: Értékelések és statisztikák -->
-      <div class="col-md-4">
+      <div class="col-md-4 order-md-2 order-1">
         <!-- Értékelés -->
         <div class="stats-card mb-3 p-3 border rounded">
           <h4 class="text-secondary mb-2">Rating</h4>
@@ -88,49 +92,32 @@
           </div>
         </div>
 
-        <!-- Népszerűség -->
-        <!-- <div class="stats-card mb-3">
-          <h6 class="text-secondary mb-2">POPULARITY</h6>
-          <div class="d-flex align-items-center justify-content-center">
-            <i class="fas fa-arrow-down text-danger me-2"></i>
-            <h4 class="mb-0">182 <span class="text-secondary">▾ 106</span></h4>
-          </div>
-        </div> -->
-
-        <!-- Videók és Fotók -->
-        <!-- <div class="stats-card mb-3">
-          <div class="d-flex align-items-center justify-content-center">
-            <i class="fas fa-video me-2 fa-2x"></i>
-            <h4 class="mb-0">3 VIDEOS</h4>
-          </div>
-        </div>
-
-        <div class="stats-card mb-3">
-          <div class="d-flex align-items-center justify-content-center">
-            <i class="fas fa-image me-2 fa-2x"></i>
-            <h4 class="mb-0">98 PHOTOS</h4>
-          </div>
-        </div> -->
-
         <!-- Watchlist gomb -->
-        <button class="btn btn-dark w-100 mb-3" id="watchlist_btn"
+        <button class="btn btn-dark w-100" id="watchlist_btn"
           (click)="watchlisted ? removeFromWatchlist() : addToWatchlist()">
           <i class="bi bi-plus-circle me-2"></i> <span id="watchlist_span">Add to Watchlist</span>
         </button>
-        <!-- <p class="text-center text-secondary">Added by 32.9K users</p> -->
 
-        <!-- Értékelések -->
-        <!--
-        <div class="d-flex justify-content-between mb-3">
-          <div>
-            <h5>115</h5>
-            <p class="text-secondary">User reviews</p>
+        <hr>
+
+        <div *ngIf="selectedShow.season != 0" class="border border-1 rounded" style="text-align: center;">
+          <div class="row p-3">
+            <div class="col-md-5 col-sm-12">
+              <h3>Seasons</h3>
+              <p class="fs-5 m-auto">{{ selectedShow.season }}</p>
+            </div>
+            <div class="d-block d-md-none">
+              <hr>
+            </div>
+            <div class="col-md-2 d-none d-md-block p-0">
+              <div class="vr mx-auto" style="height: 100%"></div>
+            </div>
+            <div class="col-md-5 col-sm-12">
+              <h3>Episodes</h3>
+              <p class="fs-5 m-auto">{{ selectedShow.episode }}</p>
+            </div>
           </div>
-          <div>
-            <h5>17</h5>
-            <p class="text-secondary">Critic reviews</p>
-          </div>
-        </div> -->
+        </div>
       </div>
     </div>
   </div>

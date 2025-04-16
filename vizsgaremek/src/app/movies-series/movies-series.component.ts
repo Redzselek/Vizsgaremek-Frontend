@@ -2,14 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { DataService } from '../data.service';
-import { CategoryService } from '../services/category.service';
 
 interface Show {
-  id: number;
+  id: number | null;
   title: string;
   description: string;
-  category: string[] | string;
+  category: number[];
   type: string;
   image_url: string;
 }
@@ -34,12 +32,7 @@ export class MoviesSeriesComponent implements OnInit {
   isLoading: boolean = true;
   error: string | null = null;
 
-  constructor(
-    private http: HttpClient,
-    private dataService: DataService,
-    private categoryService: CategoryService,
-    private router: Router
-  ) { }
+  constructor(private http: HttpClient, private router: Router) { }
 
   ngOnInit() {
     this.fetchShows();
@@ -50,6 +43,7 @@ export class MoviesSeriesComponent implements OnInit {
   }
 
   fetchShows() {
+    this.getCategories();
     this.isLoading = true;
     this.error = null;
 
@@ -59,10 +53,8 @@ export class MoviesSeriesComponent implements OnInit {
       .subscribe({
         next: (response) => {
           if (response.status === 'success') {
-            this.shows = response.data.shows;
-
-            // Kategóriák feldolgozása
-            this.processShowCategories();
+            const shows = response.data.shows;
+            this.shows = shows;
           }
           this.isLoading = false;
         },
@@ -74,27 +66,35 @@ export class MoviesSeriesComponent implements OnInit {
       });
   }
 
-  // Kategóriák feldolgozása minden show-hoz
-  processShowCategories() {
-    this.shows.forEach(show => {
-      // Convert category IDs to names
-      if (typeof show.category === 'string' && show.category) {
-        show.category = this.categoryService.parseCategoryString(show.category);
-      } else if (Array.isArray(show.category)) {
-        show.category = show.category.map(cat => this.categoryService.getCategoryNameFromId(cat.toString()));
-      } else if (!show.category) {
-        show.category = [];
+
+  predefinedCategories: any[] = [];
+  getCategories() {
+    this.http.get('https://egyedirobi.moriczcloud.hu/vizsga-api/get-categories').subscribe({
+      next: (response: any) => {
+        this.predefinedCategories = response;
+      },
+      error: (error) => {
+        console.error('Error fetching categories:', error);
       }
     });
   }
 
-  // Helper method to convert category string to array and convert IDs to names
-  getCategoryArray(category: string[] | string): string[] {
-    if (Array.isArray(category)) {
-      return category.map(cat => this.categoryService.getCategoryNameFromId(cat));
-    } else if (typeof category === 'string') {
-      return this.categoryService.parseCategoryString(category);
+  getCategoryArray(categoryIds: number[] | string): string[] {
+    if (!categoryIds) {
+      return [];
     }
-    return [];
+    if (typeof categoryIds === 'string') {
+      try {
+        categoryIds = JSON.parse(categoryIds);
+      } catch (e) {
+        console.error('Error parsing categoryIds:', e);
+        return [];
+      }
+    }
+    if (!Array.isArray(categoryIds)) {
+      console.error('categoryIds is not an array:', categoryIds);
+      return [];
+    }
+    return categoryIds.map(id => this.predefinedCategories.find(cat => cat.id === id)?.category);
   }
 }

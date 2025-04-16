@@ -5,7 +5,7 @@ import { DataService } from '../data.service';
 export const authGuard: CanActivateFn = (route, state) => {
   const dataService = inject(DataService);
   const router = inject(Router);
-  
+
   if (dataService.checkAuthenticationStatus()) {
     return true;
   } else {

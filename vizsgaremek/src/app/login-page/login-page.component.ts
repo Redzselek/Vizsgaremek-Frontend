@@ -6,10 +6,7 @@ import { CommonModule } from '@angular/common';
 import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
 
-
-// Add Bootstrap types
 declare var bootstrap: any;
-
 
 @Component({
   selector: 'app-login-page',
@@ -24,7 +21,7 @@ export class LoginPageComponent {
   successMessage: string = '';
   errorMessage: string = '';
   isLoading: boolean = false;
-  
+
   // Add these properties for ngModel binding
   email: string = '';
   password: string = '';
@@ -32,7 +29,7 @@ export class LoginPageComponent {
   isForgotPasswordLoading: boolean = false;
   forgotPasswordSuccess: boolean = false;
   forgotPasswordError: string = '';
-  
+
   // Password visibility control
   showPassword: boolean = false;
 
@@ -40,9 +37,8 @@ export class LoginPageComponent {
     private authService: AuthService,
     private dataService: DataService,
     private router: Router,
-    private http: HttpClient
-  ) { }
-  
+    private http: HttpClient) { }
+
   onSubmit(email: string, pass: string) {
     if (!email || !pass) {
       this.errorMessage = 'Email and password are required';
@@ -57,16 +53,15 @@ export class LoginPageComponent {
     this.authService.login(email, pass).subscribe({
       next: (response) => {
         this.isLoading = false;
-        
+
         // Check if the response contains a token
         if (response.message) {
-          this.successMessage = 'Login successful! You will be redirected to the main-page page.';
+          this.successMessage = 'Login successful! You will be redirected to the Homepage!';
           this.showSuccessAlert = true;
-          
+
           // Update the data service state as well for backward compatibility
           this.dataService.login();
-          
-          // Navigate to the main-page after a short delay
+
           setTimeout(() => {
             this.router.navigate(['/main-page']);
           }, 1500);
@@ -83,7 +78,6 @@ export class LoginPageComponent {
       }
     });
   }
-
   // Handle forgot password submission
   onForgotPasswordSubmit() {
     if (!this.forgotPasswordEmail) {
@@ -101,7 +95,7 @@ export class LoginPageComponent {
       next: (response: any) => {
         this.isForgotPasswordLoading = false;
         this.forgotPasswordSuccess = true;
-        
+
         // Close the modal after a short delay
         setTimeout(() => {
           const closeButton = document.querySelector('#forgotPasswordModal .btn-close') as HTMLElement;
@@ -127,6 +121,3 @@ declare global {
     Swiper: any;
   }
 }
-
-// Add Bootstrap types
-declare var bootstrap: any;
