@@ -28,7 +28,7 @@ export class AuthInterceptor implements HttpInterceptor {
     if (typeof window !== 'undefined' && window.localStorage) {
       token = window.localStorage.getItem('auth_token');
     }
-    
+
     // If token exists, add it to the Authorization header
     if (token) {
       request = request.clone({
@@ -46,10 +46,10 @@ export class AuthInterceptor implements HttpInterceptor {
           if (typeof window !== 'undefined' && window.localStorage) {
             window.localStorage.removeItem('auth_token');
           }
-          
+
           // Update authentication state
           this.dataService.logout();
-          
+
           // Redirect to login page
           this.router.navigate(['/login']);
         }

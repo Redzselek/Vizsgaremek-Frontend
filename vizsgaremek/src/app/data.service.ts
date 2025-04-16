@@ -12,7 +12,7 @@ export class DataService {
   public isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
 
   constructor(
-    private _router: Router, 
+    private _router: Router,
     private http: HttpClient,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {

@@ -17,25 +17,22 @@ import { SearchBarComponent } from "../search-bar/search-bar.component";
 })
 export class NavbarComponent implements OnInit {
   authenticated = false;
-  
+
   constructor(
-    private dataService: DataService, 
+    private dataService: DataService,
     private authService: AuthService,
     private router: Router,
     @Inject(PLATFORM_ID) private platformId: Object
   ) { }
-  
+
   ngOnInit(): void {
     // Check localStorage for authentication status
     this.authenticated = this.dataService.checkAuthenticationStatus();
-    
     // Subscribe to the dataService authentication state
     this.dataService.isAuthenticated$.subscribe(isAuthenticated => {
       this.authenticated = isAuthenticated;
     });
   }
-
-
 
   logout() {
     this.authService.logout().subscribe({

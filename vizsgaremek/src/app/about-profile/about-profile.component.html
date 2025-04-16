@@ -1,124 +1,119 @@
 <div class="container mt-4">
-    <div class="row">
-        <div class="col-md-12 p-3">
-            <h1 class="fw-bold float-start">Your Profile</h1>
-            <div class="float-end">
-                <button type="button" class="btn btn-gear" data-bs-toggle="modal"
-                    data-bs-target="#settingsModal">
-                    <i class="fa-solid fa-gear fs-1"></i>
-                </button>
-                <div class="modal fade" id="settingsModal" tabindex="-1" aria-labelledby="settingsModalLabel"
-                    aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h1 class="modal-title fs-3" id="settingsModalLabel">Settings</h1>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                    aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                <div class="col-md-12">
-                                    <div class="collapse show showSettings p-3 rounded"
-                                        id="collapsePassword">
-                                        <form (ngSubmit)="changePassword()" #passwordForm="ngForm">
-                                            <h4>Change Your Password:</h4>
-                                            <div class="mb-3">
-                                                <label for="currentPassword" class="form-label">Current Password</label>
-                                                <div class="input-group">
-                                                    <input [type]="showCurrentPassword ? 'text' : 'password'" class="form-control" id="currentPassword" 
-                                                        name="currentPassword" [(ngModel)]="currentPassword" required>
-                                                    <button class="btn btn-outline-secondary" type="button" (click)="showCurrentPassword = !showCurrentPassword">
-                                                        <i class="bi" [ngClass]="showCurrentPassword ? 'bi-eye-slash' : 'bi-eye'"></i>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label for="newPassword" class="form-label">New Password</label>
-                                                <div class="input-group">
-                                                    <input [type]="showNewPassword ? 'text' : 'password'" class="form-control" id="newPassword" 
-                                                        name="newPassword" [(ngModel)]="newPassword" required>
-                                                    <button class="btn btn-outline-secondary" type="button" (click)="showNewPassword = !showNewPassword">
-                                                        <i class="bi" [ngClass]="showNewPassword ? 'bi-eye-slash' : 'bi-eye'"></i>
-                                                    </button>
-                                                    
-                                                </div>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label for="confirmPassword" class="form-label">Confirm New Password</label>
-                                                <div class="input-group">
-                                                    <input [type]="showConfirmPassword ? 'text' : 'password'" class="form-control" id="confirmPassword" 
-                                                        name="confirmPassword" [(ngModel)]="confirmPassword" required
-                                                        [class.is-invalid]="confirmPassword && newPassword && confirmPassword !== newPassword">
-                                                    <button class="btn btn-outline-secondary" type="button" (click)="showConfirmPassword = !showConfirmPassword">
-                                                        <i class="bi" [ngClass]="showConfirmPassword ? 'bi-eye-slash' : 'bi-eye'"></i>
-                                                    </button>
-                                                    <div class="invalid-feedback" *ngIf="confirmPassword && newPassword && confirmPassword !== newPassword">
-                                                        Passwords must match
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div *ngIf="passwordError" class="alert alert-danger rounded">
-                                                {{ passwordError }}
-                                            </div>
-                                            <div *ngIf="passwordSuccess" class="alert alert-success rounded">
-                                                {{ passwordSuccess }}
-                                            </div>
-                                            <div class="d-grid gap-2">
-                                                <button type="submit" class="btn btn-primary" 
-                                                    [disabled]="isChangingPassword || !currentPassword || !newPassword || !confirmPassword || newPassword !== confirmPassword">
-                                                    <span *ngIf="isChangingPassword" class="spinner-border spinner-border-sm me-2 border-1"></span>
-                                                    Change Password
-                                                </button>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
+  <div class="row">
+    <div class="col-md-12 p-3">
+      <h1 class="fw-bold float-start">Hello, {{ user.name }}!</h1>
+      <div class="float-end">
+        <button type="button" class="btn btn-gear" data-bs-toggle="modal" data-bs-target="#settingsModal">
+          <i class="fa-solid fa-gear fs-1"></i>
+        </button>
+        <div class="modal fade" id="settingsModal" tabindex="-1" aria-labelledby="settingsModalLabel"
+          aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h1 class="modal-title fs-3" id="settingsModalLabel">Settings</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <div class="col-md-12">
+                  <form (ngSubmit)="changePassword()" #passwordForm="ngForm">
+                    <h4>Change Your Password:</h4>
+                    <div class="mb-3">
+                      <label for="currentPassword" class="form-label">Current Password</label>
+                      <div class="input-group">
+                        <input [type]="showCurrentPassword ? 'text' : 'password'" class="form-control"
+                          id="currentPassword" name="currentPassword" [(ngModel)]="currentPassword" required>
+                        <button class="btn btn-outline-secondary" type="button"
+                          (click)="showCurrentPassword = !showCurrentPassword">
+                          <i class="bi" [ngClass]="showCurrentPassword ? 'bi-eye-slash' : 'bi-eye'"></i>
+                        </button>
+                      </div>
+                    </div>
+                    <div class="mb-3">
+                      <label for="newPassword" class="form-label">New Password</label>
+                      <div class="input-group">
+                        <input [type]="showNewPassword ? 'text' : 'password'" class="form-control" id="newPassword"
+                          name="newPassword" [(ngModel)]="newPassword" required>
+                        <button class="btn btn-outline-secondary" type="button"
+                          (click)="showNewPassword = !showNewPassword">
+                          <i class="bi" [ngClass]="showNewPassword ? 'bi-eye-slash' : 'bi-eye'"></i>
+                        </button>
+                      </div>
+                    </div>
+                    <div class="mb-3">
+                      <label for="confirmPassword" class="form-label">Confirm New Password</label>
+                      <div class="input-group">
+                        <input [type]="showConfirmPassword ? 'text' : 'password'" class="form-control"
+                          id="confirmPassword" name="confirmPassword" [(ngModel)]="confirmPassword" required
+                          [class.is-invalid]="confirmPassword && newPassword && confirmPassword !== newPassword">
+                        <button class="btn btn-outline-secondary" type="button"
+                          (click)="showConfirmPassword = !showConfirmPassword">
+                          <i class="bi" [ngClass]="showConfirmPassword ? 'bi-eye-slash' : 'bi-eye'"></i>
+                        </button>
+                        <div class="invalid-feedback"
+                          *ngIf="confirmPassword && newPassword && confirmPassword !== newPassword">
+                          Passwords must match
                         </div>
+                      </div>
                     </div>
+                    <div *ngIf="passwordError" class="alert alert-danger rounded">
+                      {{ passwordError }}
+                    </div>
+                    <div *ngIf="passwordSuccess" class="alert alert-success rounded">
+                      {{ passwordSuccess }}
+                    </div>
+                    <div class="d-grid gap-2">
+                      <button type="submit" class="btn btn-primary"
+                        [disabled]="isChangingPassword || !currentPassword || !newPassword || !confirmPassword || newPassword !== confirmPassword">
+                        <span *ngIf="isChangingPassword" class="spinner-border spinner-border-sm me-2 border-1"></span>
+                        Change Password
+                      </button>
+                    </div>
+                  </form>
                 </div>
+              </div>
             </div>
+          </div>
         </div>
-        <hr>
+      </div>
     </div>
-    <div class="row mt-4">
-        <div class="col-md-6">
-            <h3 class="fw-bold">Username:</h3>
-            <h3 class="text-center mt-4">{{ user.name }}</h3>
-        </div>
-        <div class="col-md-6">
-            <h3 class="fw-bold">Email:</h3>
-            <h3 class="text-center mt-4">{{ user.email }}</h3>
-        </div>
+  </div>
+  <hr>
+  <div class="row mt-4">
+    <div class="col-md-6">
+      <h3 class="fw-bold">Email: {{ user.email }}</h3>
     </div>
-    <div class="row mt-5">
-        <div class="col-md-12 text-center">
-            <h1 class="fw-bold">Your Watchlist</h1>
-        </div>
-        <swiper-container init="false" id="watchlistSwiper" grab-cursor="true" loop="true" navigation="true"
-            autoplay-delay="2500" autoplay-disable-on-interaction="false">
-            <swiper-slide *ngFor="let watchlist of userWatchlist">
-                <div class="card  text-center">
-                    <img [src]="'https://egyedirobi.moriczcloud.hu/uploads/vizsga/' + watchlist.image_url"
-                        class="rounded-top">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ watchlist.title }}</h5>
-                        <hr>
-                        <a (click)="showDetails(watchlist.show_id)" class="btn btn-secondary w-50">About</a>
-                        <a (click)="removeFromWatchlist(watchlist.show_id)"
-                            class="btn btn-dark rounded position-absolute top-0 end-0 mt-1 me-1"><i class="fa-solid fa-bookmark"></i></a>
-                    </div>
-                </div>
-            </swiper-slide>
-        </swiper-container>
+    <div class="col-md-6">
+      <h3 class="fw-bold text-end">Register Date: {{ user.created_at | date }}</h3>
     </div>
-</div>
-
-<div class="row mt-5">
+  </div>
+  <div class="row mt-5">
     <div class="col-md-12 text-center">
-        <h1 class="fw-bold">Your Uploads</h1>
+      <h1 class="fw-bold">Your Watchlist</h1>
+    </div>
+    <swiper-container init="false" id="watchlistSwiper" grab-cursor="true" loop="true" navigation="true"
+      autoplay-delay="2500" autoplay-disable-on-interaction="false">
+      <swiper-slide *ngFor="let watchlist of userWatchlist">
+        <div class="card text-bg-dark text-center">
+          <img [src]="'https://egyedirobi.moriczcloud.hu/uploads/vizsga/' + watchlist.image_url" class="rounded-top">
+          <div class="card-body">
+            <h5 class="card-title">{{ watchlist.title }}</h5>
+            <hr>
+            <a (click)="showDetails(watchlist.show_id)" class="btn btn-secondary w-50">About</a>
+            <a (click)="removeFromWatchlist(watchlist.show_id)"
+              class="btn btn-dark rounded position-absolute top-0 end-0 mt-1 me-1"><i
+                class="fa-solid fa-bookmark"></i></a>
+          </div>
+        </div>
+      </swiper-slide>
+    </swiper-container>
+  </div>
+  <div class="row mt-5">
+    <div class="col-md-12 text-center">
+      <h1 class="fw-bold">Your Uploads</h1>
     </div>
     <div class="container mt-4">
-        <app-edit-upload></app-edit-upload>
+      <app-edit-upload></app-edit-upload>
     </div>
+  </div>
 </div>
